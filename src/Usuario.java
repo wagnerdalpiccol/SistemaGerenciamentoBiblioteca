@@ -1,11 +1,17 @@
-
+import java.util.UUID;
 
 public class Usuario {
 	
 	private String id;
-	private String login;
+	private String nome;
 	private String senha;
-
+	
+	public Usuario(String nome, String senha) {
+		this.id = UUID.randomUUID().toString();
+		this.nome  = nome;
+		this.senha = senha;
+	}
+	
 	public String getId() {
 		return id;
 	}
@@ -15,11 +21,11 @@ public class Usuario {
 	}
 
 	public String getLogin() {
-		return login;
+		return nome;
 	}
 
 	public void setLogin(String login) {
-		this.login = login;
+		this.nome = login;
 	}
 
 	public String getSenha() {

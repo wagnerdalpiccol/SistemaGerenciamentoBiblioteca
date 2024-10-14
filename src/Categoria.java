@@ -1,9 +1,14 @@
-
+import java.util.UUID;
 
 public class Categoria {
 	
 	private String id;
 	private String nome;
+	
+	public Categoria(String nome) {
+		this.id = UUID.randomUUID().toString();
+		this.nome = nome;
+	}
 
 	public String getId() {
 		return id;
