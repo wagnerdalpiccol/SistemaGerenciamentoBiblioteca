@@ -8,6 +8,16 @@ public class Usuario {
 	private String nome;
 	private String senha;
 	private Usuario[] usuarios = new Usuario[10];
+	public Usuario[] getUsuarios() {
+		return usuarios;
+	}
+
+	public void setUsuarios(Usuario[] usuarios) {
+		this.usuarios = usuarios;
+	}
+
+	private final String ADMIN_NOME = "admin";
+	private final String ADMIN_SENHA = "0000";
 
 	public Usuario() {
 
@@ -21,9 +31,9 @@ public class Usuario {
 
 	public void cadastrar() {
 		int index = -1;
-		
+
 		sc = new Scanner(System.in);
-		
+
 		for (int i = 0; i < usuarios.length; i++) {
 			if (usuarios[i] == null) {
 				index = i;
@@ -80,4 +90,13 @@ public class Usuario {
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
+
+	public String getAdminNome() {
+		return ADMIN_NOME;
+	}
+
+	public String getAdminSenha() {
+		return ADMIN_SENHA;
+	}
+
 }

@@ -14,7 +14,25 @@ public class Principal {
 	}
 
 	public void autenticacao() {
-
+		sc = new Scanner(System.in);
+		System.out.println("Digite o nome: ");
+		String nome = sc.nextLine();
+		System.out.println("Digite a senha: ");
+		String senha = sc.nextLine();
+		
+		if(nome.equals(usuario.getAdminNome()) && senha.equals(usuario.getAdminSenha())) {
+			return;
+		} else {
+			for (Usuario u : usuario.getUsuarios()) {
+				if(u != null) {
+					if(u.getNome().equals(nome) && u.getSenha().equals(senha)) {
+						return;
+					}
+				}
+			}
+		}
+		
+		System.out.println("O nome ou a senha informados está incorreta.");
 	}
 
 	public void menu() {
