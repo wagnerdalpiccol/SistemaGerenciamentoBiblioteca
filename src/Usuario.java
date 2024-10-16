@@ -1,7 +1,5 @@
 public class Usuario {
 
-	private int codigo;
-
 	private String nome;
 	private String senha;
 	private final String ADMIN_NOME = "admin";
@@ -13,7 +11,6 @@ public class Usuario {
 	}
 
 	public Usuario(String nome, String senha) {
-		this.codigo = obterNovoCodigo();
 		this.nome = nome;
 		this.senha = senha;
 	}
@@ -40,7 +37,6 @@ public class Usuario {
 		for (Usuario usuario : usuarios) {
 			if (usuario != null) {
 				System.out.println("* * * * * * * * * * * * * * * * * * * *");
-				System.out.println("ID: " + usuario.getCodigo());
 				System.out.println("NOME: " + usuario.getNome());
 				System.out.println("SENHA: " + usuario.getSenha());
 				System.out.println("* * * * * * * * * * * * * * * * * * * *");
@@ -48,29 +44,22 @@ public class Usuario {
 		}
 	}
 
-	private int obterNovoCodigo() {
-		Usuario ultimoUsuario = null;
-
-		for (int i = usuarios.length - 1; i >= 0; i--) {
-			if (usuarios[i] != null) {
-				ultimoUsuario = usuarios[i];
+	public void alterar(String nome, String senha) {
+		for (int i = 0; i < usuarios.length; i++) {
+			if (usuarios[i] != null && usuarios[i].getNome().equalsIgnoreCase(nome)) {
+				usuarios[i] = new Usuario(nome, senha);
 				break;
 			}
 		}
+	}
 
-		if (ultimoUsuario == null) {
-			return 1;
+	public void remover(String nome) {
+		for (int i = 0; i < usuarios.length; i++) {
+			if (usuarios[i] != null && usuarios[i].getNome().equalsIgnoreCase(nome)) {
+				usuarios[i] = null;
+				break;
+			}
 		}
-
-		return ultimoUsuario.getCodigo() + 1;
-	}
-
-	public int getCodigo() {
-		return codigo;
-	}
-
-	public void setCodigo(int codigo) {
-		this.codigo = codigo;
 	}
 
 	public String getNome() {

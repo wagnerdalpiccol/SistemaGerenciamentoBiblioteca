@@ -1,6 +1,6 @@
 public class Categoria {
 
-	private int codigo;
+	private String codigo;
 	private String nome;
 	private Categoria[] categorias = new Categoria[10];
 
@@ -8,12 +8,12 @@ public class Categoria {
 
 	}
 
-	public Categoria(String nome) {
-		this.codigo = obterNovoCodigo();
+	public Categoria(String codigo, String nome) {
+		this.codigo = codigo;
 		this.nome = nome;
 	}
 
-	public void cadastrar(String nome) {
+	public void cadastrar(String codigo, String nome) {
 		int index = -1;
 
 		for (int i = 0; i < categorias.length; i++) {
@@ -28,7 +28,7 @@ public class Categoria {
 			return;
 		}
 
-		categorias[index] = new Categoria(nome);
+		categorias[index] = new Categoria(codigo, nome);
 	}
 
 	public void consultar() {
@@ -40,29 +40,30 @@ public class Categoria {
 			}
 		}
 	}
-	
-	private int obterNovoCodigo() {
-		Categoria ultimaCategoria = null;
 
-		for (int i = categorias.length - 1; i >= 0; i--) {
-			if (categorias[i] != null) {
-				ultimaCategoria = categorias[i];
+	public void alterar(String codigo, String nome) {
+		for (int i = 0; i < categorias.length; i++) {
+			if (categorias[i] != null && categorias[i].getCodigo().equalsIgnoreCase(codigo)) {
+				categorias[i] = new Categoria(codigo, nome);
 				break;
 			}
 		}
-
-		if (ultimaCategoria == null) {
-			return 1;
-		}
-
-		return ultimaCategoria.getCodigo() + 1;
 	}
 
-	public int getCodigo() {
+	public void remover(String codigo) {
+		for (int i = 0; i < categorias.length; i++) {
+			if (categorias[i] != null && categorias[i].getCodigo().equalsIgnoreCase(codigo)) {
+				categorias[i] = null;
+				break;
+			}
+		}
+	}
+
+	public String getCodigo() {
 		return codigo;
 	}
 
-	public void setCodigo(int codigo) {
+	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
 

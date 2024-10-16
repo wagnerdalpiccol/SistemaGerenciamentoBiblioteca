@@ -1,6 +1,6 @@
 public class Livro {
 
-	private int codigo;
+	private String codigo;
 	private String titulo;
 	private String autor;
 	private Categoria categoria;
@@ -11,15 +11,15 @@ public class Livro {
 
 	}
 
-	public Livro(String titulo, String autor, Categoria categoria, int quantidadeAcervo) {
-		this.codigo = obterNovoCodigo();
+	public Livro(String codigo, String titulo, String autor, Categoria categoria, int quantidadeAcervo) {
+		this.codigo = codigo;
 		this.titulo = titulo;
 		this.autor = autor;
 		this.categoria = categoria;
 		this.quantidadeAcervo = quantidadeAcervo;
 	}
 
-	public void cadastrar(String titulo, String autor, Categoria categoria, int quantidadeAcervo) {
+	public void cadastrar(String codigo, String titulo, String autor, Categoria categoria, int quantidadeAcervo) {
 		int index = -1;
 
 		for (int i = 0; i < livros.length; i++) {
@@ -34,7 +34,7 @@ public class Livro {
 			return;
 		}
 
-		livros[index] = new Livro(titulo, autor, categoria, quantidadeAcervo);
+		livros[index] = new Livro(codigo, titulo, autor, categoria, quantidadeAcervo);
 	}
 
 	public void consultar() {
@@ -50,29 +50,30 @@ public class Livro {
 			}
 		}
 	}
-	
-	private int obterNovoCodigo() {
-		Livro ultimoLivro = null;
 
-		for (int i = livros.length - 1; i >= 0; i--) {
-			if (livros[i] != null) {
-				ultimoLivro = livros[i];
+	public void alterar(String codigo, String titulo, String autor, Categoria categoria, int quantidadeAcervo) {
+		for (int i = 0; i < livros.length; i++) {
+			if (livros[i] != null && livros[i].getCodigo().equalsIgnoreCase(codigo)) {
+				livros[i] = new Livro(codigo, titulo, autor, categoria, quantidadeAcervo);
 				break;
 			}
 		}
-
-		if (ultimoLivro == null) {
-			return 1;
-		}
-
-		return ultimoLivro.getCodigo() + 1;
 	}
 
-	public int getCodigo() {
+	public void remover(String codigo) {
+		for (int i = 0; i < livros.length; i++) {
+			if (livros[i] != null && livros[i].getCodigo().equalsIgnoreCase(codigo)) {
+				livros[i] = null;
+				break;
+			}
+		}
+	}
+
+	public String getCodigo() {
 		return codigo;
 	}
 
-	public void setCodigo(int codigo) {
+	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
 
@@ -106,5 +107,13 @@ public class Livro {
 
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
+	}
+
+	public Livro[] getLivros() {
+		return livros;
+	}
+
+	public void setLivros(Livro[] livros) {
+		this.livros = livros;
 	}
 }
