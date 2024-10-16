@@ -41,7 +41,7 @@ public class Livro {
 		for (Livro livro : livros) {
 			if (livro != null) {
 				System.out.println("* * * * * * * * * * * * * * * * * * * *");
-				System.out.println("ID: " + livro.getCodigo());
+				System.out.println("CÓDIGO: " + livro.getCodigo());
 				System.out.println("TÍTULO: " + livro.getTitulo());
 				System.out.println("AUTOR: " + livro.getAutor());
 				System.out.println("CATEGORIA: " + livro.getCategoria().getNome());

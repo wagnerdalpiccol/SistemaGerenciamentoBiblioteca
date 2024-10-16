@@ -205,10 +205,19 @@ public class Principal {
 
 	public void cadastrarLivro() {
 		String codigo = null;
+		Boolean vazio = true;
 		
-		if(categoria.getCategorias() == null || categoria.getCategorias().length == 0) {
-			System.out.println("Antes de cadastrar um livro, é necessário cadastrar uma categoria.");
+		for (Categoria c : categoria.getCategorias()) {
+			if(c != null) {
+				vazio = false;
+			}
 		}
+		
+		if(vazio) {
+			System.out.println("Antes de cadastrar um livro, é necessário cadastrar uma categoria.");
+			return;
+		}
+		
 
 		while (codigo == null) {
 			System.out.println("Digite o código do livro: ");
