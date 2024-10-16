@@ -1,38 +1,25 @@
-import java.util.Scanner;
-import java.util.UUID;
-
 public class Usuario {
 
-	private static Scanner sc;
-	private String id;
+	private int codigo;
+
 	private String nome;
 	private String senha;
-	private Usuario[] usuarios = new Usuario[10];
-	public Usuario[] getUsuarios() {
-		return usuarios;
-	}
-
-	public void setUsuarios(Usuario[] usuarios) {
-		this.usuarios = usuarios;
-	}
-
 	private final String ADMIN_NOME = "admin";
 	private final String ADMIN_SENHA = "0000";
+	private Usuario[] usuarios = new Usuario[10];
 
 	public Usuario() {
 
 	}
 
 	public Usuario(String nome, String senha) {
-		this.id = UUID.randomUUID().toString();
+		this.codigo = obterNovoCodigo();
 		this.nome = nome;
 		this.senha = senha;
 	}
 
-	public void cadastrar() {
+	public void cadastrar(String nome, String senha) {
 		int index = -1;
-
-		sc = new Scanner(System.in);
 
 		for (int i = 0; i < usuarios.length; i++) {
 			if (usuarios[i] == null) {
@@ -46,12 +33,6 @@ public class Usuario {
 			return;
 		}
 
-		System.out.print("Digite o nome do usuário: ");
-		String nome = sc.nextLine();
-
-		System.out.print("Digite a senha do usuário: ");
-		String senha = sc.nextLine();
-
 		usuarios[index] = new Usuario(nome, senha);
 	}
 
@@ -59,7 +40,7 @@ public class Usuario {
 		for (Usuario usuario : usuarios) {
 			if (usuario != null) {
 				System.out.println("* * * * * * * * * * * * * * * * * * * *");
-				System.out.println("ID: " + usuario.getId());
+				System.out.println("ID: " + usuario.getCodigo());
 				System.out.println("NOME: " + usuario.getNome());
 				System.out.println("SENHA: " + usuario.getSenha());
 				System.out.println("* * * * * * * * * * * * * * * * * * * *");
@@ -67,12 +48,29 @@ public class Usuario {
 		}
 	}
 
-	public String getId() {
-		return id;
+	private int obterNovoCodigo() {
+		Usuario ultimoUsuario = null;
+
+		for (int i = usuarios.length - 1; i >= 0; i--) {
+			if (usuarios[i] != null) {
+				ultimoUsuario = usuarios[i];
+				break;
+			}
+		}
+
+		if (ultimoUsuario == null) {
+			return 1;
+		}
+
+		return ultimoUsuario.getCodigo() + 1;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public int getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
 	}
 
 	public String getNome() {
@@ -99,4 +97,11 @@ public class Usuario {
 		return ADMIN_SENHA;
 	}
 
+	public Usuario[] getUsuarios() {
+		return usuarios;
+	}
+
+	public void setUsuarios(Usuario[] usuarios) {
+		this.usuarios = usuarios;
+	}
 }

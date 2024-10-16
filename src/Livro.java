@@ -1,32 +1,26 @@
-import java.util.Scanner;
-import java.util.UUID;
-
 public class Livro {
 
-	private String id;
+	private int codigo;
 	private String titulo;
 	private String autor;
 	private Categoria categoria;
 	private int quantidadeAcervo;
 	private Livro[] livros = new Livro[10];
-	private static Scanner sc;
 
 	public Livro() {
 
 	}
 
 	public Livro(String titulo, String autor, Categoria categoria, int quantidadeAcervo) {
-		this.id = UUID.randomUUID().toString();
+		this.codigo = obterNovoCodigo();
 		this.titulo = titulo;
 		this.autor = autor;
 		this.categoria = categoria;
 		this.quantidadeAcervo = quantidadeAcervo;
 	}
 
-	public void cadastrar() {
-		int index = -1, indexCategoria = -1;
-
-		sc = new Scanner(System.in);
+	public void cadastrar(String titulo, String autor, Categoria categoria, int quantidadeAcervo) {
+		int index = -1;
 
 		for (int i = 0; i < livros.length; i++) {
 			if (livros[i] == null) {
@@ -40,36 +34,14 @@ public class Livro {
 			return;
 		}
 
-		System.out.print("Digite o título do livro: ");
-		String titulo = sc.nextLine();
-
-		System.out.print("Digite o autor do livro: ");
-		String autor = sc.nextLine();
-
-		do {
-			System.out.print("Digite a categoria do livro: ");
-			String categoriaLivro = sc.nextLine();
-
-			for (int i = 0; i < categoria.getCategorias().length; i++) {
-				if (categoria.getCategorias()[i].getNome().equals(categoriaLivro)) {
-					indexCategoria = i;
-					break;
-				}
-			}
-			System.out.println("A categoria informada não existe. Tente novamente");
-		} while (indexCategoria == -1);
-
-		System.out.print("Digite a quantidade em acervo do livro: ");
-		int quantidadeAcervo = sc.nextInt();
-
-		livros[index] = new Livro(titulo, autor, categoria.getCategorias()[indexCategoria], quantidadeAcervo);
+		livros[index] = new Livro(titulo, autor, categoria, quantidadeAcervo);
 	}
 
 	public void consultar() {
 		for (Livro livro : livros) {
 			if (livro != null) {
 				System.out.println("* * * * * * * * * * * * * * * * * * * *");
-				System.out.println("ID: " + livro.getId());
+				System.out.println("ID: " + livro.getCodigo());
 				System.out.println("TÍTULO: " + livro.getTitulo());
 				System.out.println("AUTOR: " + livro.getAutor());
 				System.out.println("CATEGORIA: " + livro.getCategoria().getNome());
@@ -78,13 +50,30 @@ public class Livro {
 			}
 		}
 	}
+	
+	private int obterNovoCodigo() {
+		Livro ultimoLivro = null;
 
-	public String getId() {
-		return id;
+		for (int i = livros.length - 1; i >= 0; i--) {
+			if (livros[i] != null) {
+				ultimoLivro = livros[i];
+				break;
+			}
+		}
+
+		if (ultimoLivro == null) {
+			return 1;
+		}
+
+		return ultimoLivro.getCodigo() + 1;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public int getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
 	}
 
 	public String getTitulo() {

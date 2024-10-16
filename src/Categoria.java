@@ -1,32 +1,19 @@
-import java.util.Scanner;
-import java.util.UUID;
-
 public class Categoria {
 
-	private String id;
+	private int codigo;
 	private String nome;
 	private Categoria[] categorias = new Categoria[10];
-	private static Scanner sc;
-
-	public Categoria(String nome) {
-		this.id = UUID.randomUUID().toString();
-		this.nome = nome;
-	}
-
-	public Categoria[] getCategorias() {
-		return categorias;
-	}
-
-	public void setCategorias(Categoria[] categorias) {
-		this.categorias = categorias;
-	}
 
 	public Categoria() {
 
 	}
 
-	public void cadastrar() {
-		sc = new Scanner(System.in);
+	public Categoria(String nome) {
+		this.codigo = obterNovoCodigo();
+		this.nome = nome;
+	}
+
+	public void cadastrar(String nome) {
 		int index = -1;
 
 		for (int i = 0; i < categorias.length; i++) {
@@ -41,28 +28,42 @@ public class Categoria {
 			return;
 		}
 
-		System.out.print("Digite o nome da categoria: ");
-		String nome = sc.nextLine();
-
 		categorias[index] = new Categoria(nome);
 	}
 
 	public void consultar() {
 		for (Categoria categoria : categorias) {
 			if (categoria != null) {
-				System.out.println("ID: " + categoria.getId());
+				System.out.println("CÓDIGO: " + categoria.getCodigo());
 				System.out.println("NOME: " + categoria.getNome());
 				System.out.println("* * * * * * * * * * * * * * * * * * * *");
 			}
 		}
 	}
+	
+	private int obterNovoCodigo() {
+		Categoria ultimaCategoria = null;
 
-	public String getId() {
-		return id;
+		for (int i = categorias.length - 1; i >= 0; i--) {
+			if (categorias[i] != null) {
+				ultimaCategoria = categorias[i];
+				break;
+			}
+		}
+
+		if (ultimaCategoria == null) {
+			return 1;
+		}
+
+		return ultimaCategoria.getCodigo() + 1;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public int getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
 	}
 
 	public String getNome() {
@@ -71,5 +72,13 @@ public class Categoria {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public Categoria[] getCategorias() {
+		return categorias;
+	}
+
+	public void setCategorias(Categoria[] categorias) {
+		this.categorias = categorias;
 	}
 }
