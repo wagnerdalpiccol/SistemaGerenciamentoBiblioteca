@@ -50,6 +50,28 @@ public class Livro {
 			}
 		}
 	}
+	
+	public void consultar_esp(String codigo) {
+	    boolean encontrado = false;
+	    
+	    for (Livro livro : livros) {
+	        if (livro != null && livro.getCodigo().equalsIgnoreCase(codigo)) {
+	        	System.out.println("* * * * * * * * * * * * * * * * * * * *");
+				System.out.println("CÓDIGO: " + livro.getCodigo());
+				System.out.println("TÍTULO: " + livro.getTitulo());
+				System.out.println("AUTOR: " + livro.getAutor());
+				System.out.println("CATEGORIA: " + livro.getCategoria().getNome());
+				System.out.println("QUANTIDADE EM ACERVO: " + livro.getQuantidadeAcervo());
+				System.out.println("* * * * * * * * * * * * * * * * * * * *");
+	            encontrado = true;
+	            break;
+	        }
+	    }
+	    
+	    if (!encontrado) {
+	        System.out.println("Livro com o código " + codigo + " não foi encontrado.");
+	    }
+	}
 
 	public void alterar(String codigo, String titulo, String autor, Categoria categoria, int quantidadeAcervo) {
 		for (int i = 0; i < livros.length; i++) {

@@ -82,9 +82,10 @@ public class Principal {
 			System.out.println("* * * * MENU CATEGORIA * * * *");
 			System.out.println("* 1. Cadastrar");
 			System.out.println("* 2. Consultar");
-			System.out.println("* 3. Alterar");
-			System.out.println("* 4. Remover");
-			System.out.println("* 5. Voltar ao Menu Principal");
+			System.out.println("* 3. Consultar específica");
+			System.out.println("* 4. Alterar");
+			System.out.println("* 5. Remover");
+			System.out.println("* 6. Voltar ao Menu Principal");
 			System.out.println("* * * * * * * * * * * * * * * * * * * *");
 			System.out.print("Selecione uma das opções: ");
 			op = sc.nextInt();
@@ -98,17 +99,23 @@ public class Principal {
 				categoria.consultar();
 				break;
 			case 3:
-				alterarCategoria();
+				System.out.println("Digite o código da categoria: ");
+				String codigoConsulta = sc.nextLine();
+				categoria.consultar_esp(codigoConsulta);
+           
 				break;
 			case 4:
-				removerCategoria();
+				alterarCategoria();
 				break;
 			case 5:
+				removerCategoria();
+				break;
+			case 6:
 				break;
 			default:
 				System.out.println("Opção inválida! Tente novamente.");
 			}
-		} while (op != 5);
+		} while (op != 6);
 	}
 
 	public void menuLivro() {
@@ -117,9 +124,10 @@ public class Principal {
 			System.out.println("* * * * MENU LIVRO * * * *");
 			System.out.println("* 1. Cadastrar");
 			System.out.println("* 2. Consultar");
-			System.out.println("* 3. Alterar");
-			System.out.println("* 4. Remover");
-			System.out.println("* 5. Voltar ao Menu Principal");
+			System.out.println("* 3. Consultar específico");
+			System.out.println("* 4. Alterar");
+			System.out.println("* 5. Remover");
+			System.out.println("* 6. Voltar ao Menu Principal");
 			System.out.println("* * * * * * * * * * * * * * * * * * * *");
 			System.out.print("Selecione uma das opções: ");
 			opLivro = sc.nextInt();
@@ -133,17 +141,22 @@ public class Principal {
 				livro.consultar();
 				break;
 			case 3:
-				alterarLivro();
+				System.out.println("Digite o código do livro: ");
+				String codigoLivro = sc.nextLine();
+				livro.consultar_esp(codigoLivro);
 				break;
 			case 4:
-				removerLivro();
+				alterarLivro();
 				break;
 			case 5:
+				removerLivro();
+				break;
+			case 6:
 				break;
 			default:
 				System.out.println("Opção inválida! Tente novamente.");
 			}
-		} while (opLivro != 5);
+		} while (opLivro != 6);
 	}
 
 	public void menuUsuario() {
@@ -152,9 +165,10 @@ public class Principal {
 			System.out.println("* * * * MENU USUÁRIO * * * *");
 			System.out.println("* 1. Cadastrar");
 			System.out.println("* 2. Consultar");
-			System.out.println("* 3. Alterar");
-			System.out.println("* 4. Remover");
-			System.out.println("* 5. Voltar ao Menu Principal");
+			System.out.println("* 3. Consultar específico");
+			System.out.println("* 4. Alterar");
+			System.out.println("* 5. Remover");
+			System.out.println("* 6. Voltar ao Menu Principal");
 			System.out.println("* * * * * * * * * * * * * * * * * * * *");
 			System.out.print("Selecione uma das opções: ");
 			op = sc.nextInt();
@@ -167,18 +181,25 @@ public class Principal {
 			case 2:
 				usuario.consultar();
 				break;
+			
 			case 3:
+				System.out.println("Digite o nome do usuário: ");
+				String nomeUsuario = sc.nextLine();
+				usuario.consultar_esp(nomeUsuario);
+				break;
+				
+			case 4:
 				alterarUsuario();
 				break;
-			case 4:
+			case 5:
 				removerUsuario();
 				break;
-			case 5:
+			case 6:
 				break;
 			default:
 				System.out.println("Opção inválida! Tente novamente.");
 			}
-		} while (op != 5);
+		} while (op != 6);
 	}
 
 	public void cadastrarCategoria() {
@@ -285,8 +306,11 @@ public class Principal {
 
 		System.out.print("Digite a senha do usuário: ");
 		String senha = sc.nextLine();
+		
+		System.out.print("Digite o email do usuário: ");
+		String email = sc.nextLine();
 
-		usuario.cadastrar(nome, senha);
+		usuario.cadastrar(nome, senha, email);
 	}
 
 	public void alterarCategoria() {
@@ -353,7 +377,10 @@ public class Principal {
 
 		System.out.print("Digite a senha do usuário: ");
 		String senha = sc.nextLine();
-		usuario.alterar(nome, senha);
+		
+		System.out.print("Digite o email do usuário: ");
+		String email = sc.nextLine();
+		usuario.alterar(nome, senha, email);
 	}
 
 	public void removerCategoria() {

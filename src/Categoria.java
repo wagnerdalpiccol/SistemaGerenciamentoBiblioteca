@@ -40,6 +40,25 @@ public class Categoria {
 			}
 		}
 	}
+	
+	public void consultar_esp(String codigo) {
+	    boolean encontrada = false;
+	    
+	    for (Categoria categoria : categorias) {
+	        if (categoria != null && categoria.getCodigo().equalsIgnoreCase(codigo)) {
+	            System.out.println("CÓDIGO: " + categoria.getCodigo());
+	            System.out.println("NOME: " + categoria.getNome());
+	            System.out.println("* * * * * * * * * * * * * * * * * * * *");
+	            encontrada = true;
+	            break;
+	        }
+	    }
+	    
+	    if (!encontrada) {
+	        System.out.println("Categoria com código " + codigo + " não foi encontrada.");
+	    }
+	}
+
 
 	public void alterar(String codigo, String nome) {
 		for (int i = 0; i < categorias.length; i++) {
