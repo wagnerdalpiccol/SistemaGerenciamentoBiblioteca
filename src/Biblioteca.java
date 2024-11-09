@@ -7,9 +7,9 @@ import java.util.NoSuchElementException;
 public class Biblioteca {
 	private List<Livro> livros = new ArrayList<Livro>();
 	private Map<Integer, Categoria> categorias = new HashMap<Integer, Categoria>();
-	
+
 	public Biblioteca() {
-		
+
 	}
 
 	// LIVROS
@@ -46,7 +46,7 @@ public class Biblioteca {
 				return livro;
 			}
 		}
-		
+
 		throw new NoSuchElementException("Livro com código " + codigo + " não encontrado.");
 	}
 
@@ -60,10 +60,7 @@ public class Biblioteca {
 		throw new NoSuchElementException("Livro " + titulo + " não encontrado.");
 	}
 
-	public List<Livro> consultarLivros() throws NoSuchElementException {
-		if (this.livros.isEmpty()) {
-			throw new NoSuchElementException("Nenhum livro encontrado.");
-		}
+	public List<Livro> consultarLivros() {
 		return this.livros;
 	}
 
@@ -110,14 +107,8 @@ public class Biblioteca {
 		throw new NoSuchElementException("Categoria com descrição '" + descricao + "' não encontrada.");
 	}
 
-	public List<Categoria> consultarCategorias() throws NoSuchElementException {
-		List<Categoria> listaCategorias = new ArrayList<>(categorias.values());
-
-		if (listaCategorias.isEmpty()) {
-			throw new NoSuchElementException("Nenhuma categoria encontrada.");
-		}
-
-		return listaCategorias;
+	public List<Categoria> consultarCategorias() {
+		return new ArrayList<>(categorias.values());
 	}
 
 }
