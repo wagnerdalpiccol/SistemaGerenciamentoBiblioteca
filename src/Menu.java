@@ -15,35 +15,53 @@ public class Menu {
 
 	public static void main(String[] args) {
 		Menu menu = new Menu();
+		sc = new Scanner(System.in);
+		// menu.autenticacao();
 		menu.menuGeral();
+		sc.close();
 	}
 
+	// MENU
+
 	public void menuGeral() {
-		int op;
-		sc = new Scanner(System.in);
+		int op = -1;
 
 		do {
 			System.out.println(" 1 - Livros");
 			System.out.println(" 2 - Categorias");
+			System.out.println(" 3 - Leitores");
 			System.out.println(" 0 - sair ");
-			op = sc.nextInt();
-			sc.nextLine();
 
-			switch (op) {
-			case 1:
-				menuLivros();
-				break;
-			case 2:
-				menuCategorias();
-				break;
+			if (sc.hasNextInt()) {
+				op = sc.nextInt();
+				sc.nextLine();
+
+				switch (op) {
+				case 1:
+					menuLivros();
+					break;
+				case 2:
+					menuCategorias();
+					break;
+				case 3:
+					menuLeitores();
+					break;
+				case 0:
+					System.out.println("Saindo...");
+					break;
+				default:
+					System.out.println("Opção inválida, tente novamente.");
+					break;
+				}
+			} else {
+				System.out.println("Por favor, digite um número válido.");
+				sc.nextLine();
 			}
 		} while (op != 0);
-
-		sc.close();
 	}
 
 	public void menuLivros() {
-		int op;
+		int op = -1;
 
 		do {
 			System.out.println(" 1 - Adicionar");
@@ -51,28 +69,40 @@ public class Menu {
 			System.out.println(" 3 - Editar");
 			System.out.println(" 4 - Consultar");
 			System.out.println(" 0 - sair ");
-			op = sc.nextInt();
-			sc.nextLine();
 
-			switch (op) {
-			case 1:
-				adicionarLivro();
-				break;
-			case 2:
-				removerLivro();
-				break;
-			case 3:
-				editarLivro();
-				break;
-			case 4:
-				consultarLivro();
-				break;
+			if (sc.hasNextInt()) {
+				op = sc.nextInt();
+				sc.nextLine();
+
+				switch (op) {
+				case 1:
+					adicionarLivro();
+					break;
+				case 2:
+					removerLivro();
+					break;
+				case 3:
+					editarLivro();
+					break;
+				case 4:
+					consultarLivro();
+					break;
+				case 0:
+					System.out.println("Saindo...");
+					break;
+				default:
+					System.out.println("Opção inválida, tente novamente.");
+					break;
+				}
+			} else {
+				System.out.println("Por favor, digite um número válido.");
+				sc.nextLine();
 			}
 		} while (op != 0);
 	}
 
 	public void menuCategorias() {
-		int op;
+		int op = -1;
 
 		do {
 			System.out.println(" 1 - Adicionar");
@@ -80,22 +110,75 @@ public class Menu {
 			System.out.println(" 3 - Editar");
 			System.out.println(" 4 - Consultar");
 			System.out.println(" 0 - sair ");
-			op = sc.nextInt();
-			sc.nextLine();
 
-			switch (op) {
-			case 1:
-				adicionarCategoria();
-				break;
-			case 2:
-				removerCategoria();
-				break;
-			case 3:
-				editarCategoria();
-				break;
-			case 4:
-				consultarCategoria();
-				break;
+			if (sc.hasNextInt()) {
+				op = sc.nextInt();
+				sc.nextLine();
+
+				switch (op) {
+				case 1:
+					adicionarCategoria();
+					break;
+				case 2:
+					removerCategoria();
+					break;
+				case 3:
+					editarCategoria();
+					break;
+				case 4:
+					consultarCategoria();
+					break;
+				case 0:
+					System.out.println("Saindo...");
+					break;
+				default:
+					System.out.println("Opção inválida, tente novamente.");
+					break;
+				}
+			} else {
+				System.out.println("Por favor, digite um número válido.");
+				sc.nextLine();
+			}
+		} while (op != 0);
+	}
+
+	public void menuLeitores() {
+		int op = -1;
+
+		do {
+			System.out.println(" 1 - Adicionar");
+			System.out.println(" 2 - Remover");
+			System.out.println(" 3 - Editar");
+			System.out.println(" 4 - Consultar");
+			System.out.println(" 0 - sair ");
+
+			if (sc.hasNextInt()) {
+				op = sc.nextInt();
+				sc.nextLine();
+
+				switch (op) {
+				case 1:
+					adicionarLeitor();
+					break;
+				case 2:
+					removerLeitor();
+					break;
+				case 3:
+					editarLeitor();
+					break;
+				case 4:
+					consultarLeitor();
+					break;
+				case 0:
+					System.out.println("Saindo...");
+					break;
+				default:
+					System.out.println("Opção inválida, tente novamente.");
+					break;
+				}
+			} else {
+				System.out.println("Por favor, digite um número válido.");
+				sc.nextLine();
 			}
 		} while (op != 0);
 	}
@@ -151,28 +234,34 @@ public class Menu {
 	}
 
 	public void editarCategoria() {
-		System.out.println("Digite o código da categoria que deseja editar:");
-		int codigo = sc.nextInt();
-		sc.nextLine();
 
-		System.out.println("Digite a descrição da categoria");
-		String descricao = sc.nextLine();
+		try {
 
-		for (Entry<Integer, String> c : biblioteca.consultarCategorias()) {
-			if (c.getKey().equals(codigo)) {
-				biblioteca.editarCategoria(codigo, descricao);
-				return;
+			System.out.println("Digite o código da categoria que deseja editar:");
+			int codigo = sc.nextInt();
+			sc.nextLine();
+
+			biblioteca.consultarCategoriaCodigo(codigo);
+
+			System.out.println("Digite a descrição da categoria");
+			String descricao = sc.nextLine();
+
+			for (Entry<Integer, String> c : biblioteca.consultarCategorias()) {
+				if (c.getKey().equals(codigo)) {
+					biblioteca.editarCategoria(codigo, descricao);
+					return;
+				}
 			}
-		}
+		} catch (Exception e) {
 
-		System.out.println("A categoria de código " + codigo + " não foi encontrada.");
+		}
 	}
 
 	public void consultarCategoria() {
 		int op;
 
 		System.out.println(" 1 - Consultar Por Código");
-		System.out.println(" 2 - Consultar Por Título");
+		System.out.println(" 2 - Consultar Por Descrição");
 		System.out.println(" 3 - Consultar Todos");
 
 		op = sc.nextInt();
@@ -410,77 +499,199 @@ public class Menu {
 		System.out.println(" 1 - Consultar Por Código");
 		System.out.println(" 2 - Consultar Por Título");
 		System.out.println(" 3 - Consultar Todos");
+		if (sc.hasNextInt()) {
+			op = sc.nextInt();
+			sc.nextLine();
 
-		op = sc.nextInt();
-		sc.nextLine();
-
-		switch (op) {
-		case 1:
-			try {
-				int codigo = 0;
-
-				System.out.println("Digite o código do livro:");
-
+			switch (op) {
+			case 1:
 				try {
-					codigo = sc.nextInt();
-					sc.nextLine();
-				} catch (InputMismatchException e) {
-					System.out.println("Entrada inválida! Por favor, insira um número inteiro.");
-					sc.nextLine();
-					return;
+					int codigo = 0;
+
+					System.out.println("Digite o código do livro:");
+
+					try {
+						codigo = sc.nextInt();
+						sc.nextLine();
+					} catch (InputMismatchException e) {
+						System.out.println("Entrada inválida! Por favor, insira um número inteiro.");
+						sc.nextLine();
+						return;
+					}
+
+					Livro livro = biblioteca.consultarLivroCodigo(codigo);
+
+					System.out.println(" Código - " + livro.getCodigo());
+					System.out.println(" Título - " + livro.getTitulo());
+					System.out.println(" Autor - " + livro.getAutor());
+					System.out.println(
+							"Categoria - " + (livro.getCategoria() != null ? livro.getCategoria() : "Sem categoria"));
+					System.out.println(" Quantidade Disponível - " + livro.getQuantidadeDisponivel());
+
+				} catch (NoSuchElementException e) {
+					System.out.println(e.getMessage());
 				}
 
-				Livro livro = biblioteca.consultarLivroCodigo(codigo);
+				break;
+			case 2:
+				try {
+					System.out.println("Digite o título do livro:");
+					String titulo = sc.next().trim();
+					Livro livro = biblioteca.consultarLivroTitulo(titulo);
 
-				System.out.println(" Código - " + livro.getCodigo());
-				System.out.println(" Título - " + livro.getTitulo());
-				System.out.println(" Autor - " + livro.getAutor());
-				System.out.println(
-						"Categoria - " + (livro.getCategoria() != null ? livro.getCategoria() : "Sem categoria"));
-				System.out.println(" Quantidade Disponível - " + livro.getQuantidadeDisponivel());
+					System.out.println(" Código - " + livro.getCodigo());
+					System.out.println(" Título - " + livro.getTitulo());
+					System.out.println(" Autor - " + livro.getAutor());
+					System.out.println(
+							"Categoria - " + (livro.getCategoria() != null ? livro.getCategoria() : "Sem categoria"));
+					System.out.println(" Quantidade Disponível - " + livro.getQuantidadeDisponivel());
 
-			} catch (NoSuchElementException e) {
-				System.out.println(e.getMessage());
-			}
-
-			break;
-		case 2:
-			try {
-				System.out.println("Digite o título do livro:");
-				String titulo = sc.next().trim();
-				Livro livro = biblioteca.consultarLivroTitulo(titulo);
-
-				System.out.println(" Código - " + livro.getCodigo());
-				System.out.println(" Título - " + livro.getTitulo());
-				System.out.println(" Autor - " + livro.getAutor());
-				System.out.println(
-						"Categoria - " + (livro.getCategoria() != null ? livro.getCategoria() : "Sem categoria"));
-				System.out.println(" Quantidade Disponível - " + livro.getQuantidadeDisponivel());
-
-			} catch (NoSuchElementException e) {
-				System.out.println(e.getMessage());
-			}
-
-			break;
-		case 3:
-			try {
-				List<Livro> livros = biblioteca.consultarLivros();
-				System.out.println("Código\t\tTítulo\t\tAutor\t\tCategoria\t\tQuantidade Disponível");
-				for (Livro l : livros) {
-					System.out.println(l.getCodigo() + "\t\t" + l.getTitulo() + "\t\t" + l.getAutor() + "\t\t"
-							+ (l.getCategoria() != null ? l.getCategoria() : "Sem categoria") + "\t\t"
-							+ l.getQuantidadeDisponivel());
+				} catch (NoSuchElementException e) {
+					System.out.println(e.getMessage());
 				}
 
-			} catch (NoSuchElementException e) {
-				System.out.println(e.getMessage());
-			}
+				break;
+			case 3:
+				try {
+					List<Livro> livros = biblioteca.consultarLivros();
+					System.out.println("Código\t\tTítulo\t\tAutor\t\tCategoria\t\tQuantidade Disponível");
+					for (Livro l : livros) {
+						System.out.println(l.getCodigo() + "\t\t" + l.getTitulo() + "\t\t" + l.getAutor() + "\t\t"
+								+ (l.getCategoria() != null ? l.getCategoria().getValue() : "Sem categoria") + "\t\t"
+								+ l.getQuantidadeDisponivel());
+					}
 
-			break;
+				} catch (NoSuchElementException e) {
+					System.out.println(e.getMessage());
+				}
+
+				break;
+			}
+		} else {
+			System.out.println("Número válido digitado.");
+			sc.nextLine();
 		}
 	}
 
-	// LEITORE
+	// LEITOR
+
+	public void adicionarLeitor() {
+		try {
+			System.out.println("Digite o nome de usuário do leitor: ");
+			String usuario = sc.nextLine();
+
+			System.out.println("Digite a senha do leitor: ");
+			String senha = sc.nextLine();
+
+			biblioteca.adicionarLeitor(new Leitor(usuario, senha));
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public void removerLeitor() {
+		System.out.println("Digite o nome de usuário do leitor que deseja remover:");
+		String usuario = sc.nextLine();
+
+		for (Leitor l : biblioteca.consultarLeitores()) {
+			if (l.getUsuario().equals(usuario)) {
+				biblioteca.removerLeitor(usuario);
+				return;
+			}
+		}
+
+		System.out.println("O leitor com nome de usuário " + usuario + " não foi encontrado.");
+	}
+
+	public void editarLeitor() {
+		System.out.println("Digite o nome de usuário do leitor que deseja editar:");
+		String usuario = sc.nextLine();
+
+		try {
+			Leitor leitor = biblioteca.consultarLeitorUsuario(usuario);
+
+			int indexLeitor = -1;
+
+			List<Leitor> leitores = biblioteca.consultarLeitores();
+
+			for (int i = 0; i < leitores.size(); i++) {
+				if (leitores.get(i).getUsuario().equals(usuario)) {
+					indexLeitor = i;
+					break;
+				}
+			}
+
+			System.out.println("Selecione o campo que deseja editar:");
+			System.out.println("1 - Usuário");
+			System.out.println("2 - Senha");
+
+			if (sc.hasNextInt()) {
+				int op = sc.nextInt();
+				sc.nextLine();
+
+				switch (op) {
+				case 1:
+					System.out.println("Digite o novo nome de usuário:");
+					String novoUsuario = sc.nextLine();
+					leitor.setUsuario(novoUsuario);
+					break;
+				case 2:
+					System.out.println("Digite a nova senha:");
+					String novaSenha = sc.nextLine();
+					leitor.setSenha(novaSenha);
+					break;
+				default:
+					System.out.println("Opção inválida.");
+					return;
+				}
+			} else {
+				System.out.println("Por favor, digite um número válido.");
+				sc.nextLine();
+			}
+
+			biblioteca.editarLeitor(indexLeitor, leitor);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public void consultarLeitor() {
+		int op;
+
+		System.out.println(" 1 - Consultar Por Usuário");
+		System.out.println(" 2 - Consultar Todos");
+		if (sc.hasNextInt()) {
+			op = sc.nextInt();
+			sc.nextLine();
+
+			switch (op) {
+			case 1:
+				System.out.println("Digite o nome de usuário:");
+				String usuario = sc.nextLine();
+				try {
+					Leitor leitor = biblioteca.consultarLeitorUsuario(usuario);
+					System.out.println("Usuário: " + leitor.getUsuario());
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+				}
+				break;
+			case 2:
+				System.out.println("Usuário");
+				
+				for(Leitor l : biblioteca.consultarLeitores()) {
+					System.out.println(l.getUsuario());
+				}
+				
+				break;
+			default:
+				System.out.println("Opção inválida.");
+				return;
+			}
+		} else {
+			System.out.println("Por favor, digite um número válido.");
+			sc.nextLine();
+		}
+	}
 
 	// AUTENTICAÇÂO
 
@@ -495,11 +706,11 @@ public class Menu {
 			String senha = sc.nextLine();
 
 			usuarioExiste = biblioteca.autenticacao(usuario, senha);
-			
-			if(!usuarioExiste) {
+
+			if (!usuarioExiste) {
 				System.out.println("Usuário ou senha incorretos.");
 			}
-			
+
 		} while (!usuarioExiste);
 	}
 }

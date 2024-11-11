@@ -34,11 +34,7 @@ public class Biblioteca {
 		this.livros.remove(index);
 	}
 
-	public void editarLivro(int index, Livro livro) throws IndexOutOfBoundsException {
-		if (index < 0 || index >= this.livros.size()) {
-			throw new IndexOutOfBoundsException("Índice inválido: " + index);
-		}
-
+	public void editarLivro(int index, Livro livro) {
 		this.livros.set(index, livro);
 	}
 
@@ -69,11 +65,10 @@ public class Biblioteca {
 	// CATEGORIA
 
 	public void adicionarCategoria(int codigo, String descricao) throws IllegalArgumentException {
-		if (!this.categorias.containsKey(codigo)) {
-			this.categorias.put(codigo, descricao);
+		if (this.categorias.containsKey(codigo)) {
+			throw new IllegalArgumentException("Categoria com código " + codigo + " já existe.");
 		}
-
-		throw new IllegalArgumentException("Categoria com código " + codigo + " já existe.");
+		this.categorias.put(codigo, descricao);
 	}
 
 	public void removerCategoria(int codigo) throws NoSuchElementException {
@@ -82,12 +77,8 @@ public class Biblioteca {
 		}
 	}
 
-	public void editarCategoria(int codigo, String descricao) throws NoSuchElementException {
-		if (categorias.containsKey(codigo)) {
-			this.categorias.put(codigo, descricao);
-		}
-
-		throw new NoSuchElementException("Categoria com código " + codigo + " não encontrada.");
+	public void editarCategoria(int codigo, String descricao) {
+		this.categorias.put(codigo, descricao);
 	}
 
 	public Map.Entry<Integer, String> consultarCategoriaCodigo(int codigo) throws NoSuchElementException {
@@ -109,8 +100,54 @@ public class Biblioteca {
 	public Set<Map.Entry<Integer, String>> consultarCategorias() {
 		return categorias.entrySet();
 	}
-	
+
 	// LEITOR
+
+	public void adicionarLeitor(Leitor leitor) throws IllegalArgumentException {
+		for (Leitor l : leitores) {
+			if (l.getUsuario().equals(leitor.getUsuario())) {
+				throw new IllegalArgumentException("Leitor com o usuário " + leitor.getUsuario() + " já existe.");
+			}
+		}
+		leitores.add(leitor);
+	}
+
+	public void removerLeitor(String usuario) throws NoSuchElementException {
+		Leitor leitorRemover = null;
+		for (Leitor l : leitores) {
+			if (l.getUsuario().equals(usuario)) {
+				leitorRemover = l;
+				break;
+			}
+		}
+		if (leitorRemover != null) {
+			leitores.remove(leitorRemover);
+		} else {
+			throw new NoSuchElementException("Leitor com usuário " + usuario + " não encontrado.");
+		}
+	}
+
+	public void editarLeitor(int index, Leitor leitor) throws NoSuchElementException {
+
+		if (index < 0 || index >= this.leitores.size()) {
+			throw new IndexOutOfBoundsException("Índice inválido: " + index);
+		}
+
+		leitores.set(index, leitor);
+	}
+
+	public Leitor consultarLeitorUsuario(String usuario) throws NoSuchElementException {
+		for (Leitor l : leitores) {
+			if (l.getUsuario().equals(usuario)) {
+				return l;
+			}
+		}
+		throw new NoSuchElementException("Leitor com usuário " + usuario + " não encontrado.");
+	}
+
+	public List<Leitor> consultarLeitores() {
+		return leitores;
+	}
 
 	// AUTENTICAÇÂO
 
