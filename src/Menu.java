@@ -303,10 +303,21 @@ public class Menu {
 	public void adicionarLivro() {
 
 		try {
-			System.out.println("Digite o código do livro: ");
-			int codigo = sc.nextInt();
-			sc.nextLine();
-			biblioteca.consultarLivroCodigo(codigo);
+			boolean livroExiste;
+			int codigo;
+
+			do {
+				System.out.println("Digite o código do livro: ");
+				codigo = sc.nextInt();
+				sc.nextLine();
+
+				livroExiste = biblioteca.livroExiste(codigo);
+
+				if (livroExiste) {
+					System.out.println("O código informado já pertence a outro livro.");
+				}
+
+			} while (livroExiste);
 
 			System.out.println("Digite o título do livro: ");
 			String titulo = sc.nextLine();
@@ -342,20 +353,16 @@ public class Menu {
 	}
 
 	public void removerLivro() {
+		try {
+			System.out.println("Digite o código do livro que deseja remover:");
+			int codigo = sc.nextInt();
+			sc.nextLine();
+			biblioteca.removerLivro(codigo);
 
-		System.out.println("Digite o código do livro que deseja remover:");
-		int codigo = sc.nextInt();
-		sc.nextLine();
-
-		for (int i = 0; i < biblioteca.consultarLivros().size(); i++) {
-			Livro l = biblioteca.consultarLivros().get(i);
-			if (l.getCodigo() == codigo) {
-				biblioteca.removerLivro(i);
-				return;
-			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
 		}
 
-		System.out.println("O livro de código " + codigo + " não foi encontrado.");
 	}
 
 	public void editarLivro() {
@@ -526,22 +533,12 @@ public class Menu {
 	}
 
 	public void editarLeitor() {
-		System.out.println("Digite o nome de usuário do leitor que deseja editar:");
-		String usuario = sc.nextLine();
 
 		try {
+			System.out.println("Digite o nome de usuário do leitor que deseja editar:");
+			String usuario = sc.nextLine();
+
 			Leitor leitor = biblioteca.consultarLeitorUsuario(usuario);
-
-			int indexLeitor = -1;
-
-			List<Leitor> leitores = biblioteca.consultarLeitores();
-
-			for (int i = 0; i < leitores.size(); i++) {
-				if (leitores.get(i).getUsuario().equals(usuario)) {
-					indexLeitor = i;
-					break;
-				}
-			}
 
 			System.out.println("Selecione o campo que deseja editar:");
 			System.out.println("1 - Usuário");
@@ -571,7 +568,7 @@ public class Menu {
 				sc.nextLine();
 			}
 
-			biblioteca.editarLeitor(indexLeitor, leitor);
+			biblioteca.editarLeitor(leitor);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -599,11 +596,9 @@ public class Menu {
 				break;
 			case 2:
 				System.out.println("Usuário");
-
 				for (Leitor l : biblioteca.consultarLeitores()) {
 					System.out.println(l.getUsuario());
 				}
-
 				break;
 			default:
 				System.out.println("Opção inválida.");

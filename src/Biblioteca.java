@@ -17,12 +17,14 @@ public class Biblioteca {
 		this.livros.add(livro);
 	}
 
-	public void removerLivro(int index) throws IndexOutOfBoundsException {
-		if (index < 0 || index >= this.livros.size()) {
-			throw new IndexOutOfBoundsException("Índice inválido: " + index);
+	public void removerLivro(int codigo) throws IndexOutOfBoundsException {
+		for (int i = 0; i < this.livros.size(); i++) {
+			if (this.livros.get(i).getCodigo() == codigo) {
+				this.livros.remove(i);
+				return;
+			}
 		}
-
-		this.livros.remove(index);
+		throw new NoSuchElementException("Livro com código " + codigo + " não encontrada.");
 	}
 
 	public void editarLivro(Livro livro) {
@@ -146,13 +148,14 @@ public class Biblioteca {
 		}
 	}
 
-	public void editarLeitor(int index, Leitor leitor) throws NoSuchElementException {
-
-		if (index < 0 || index >= this.leitores.size()) {
-			throw new IndexOutOfBoundsException("Índice inválido: " + index);
+	public void editarLeitor(Leitor leitor) throws NoSuchElementException {
+		for (int i = 0; i < this.leitores.size(); i++) {
+			if (this.leitores.get(i).getUsuario().equals(leitor.getUsuario())) {
+				this.leitores.set(i, leitor);
+				return;
+			}
 		}
-
-		leitores.set(index, leitor);
+		throw new NoSuchElementException("Leitor com usuário " + leitor.getUsuario() + " não encontrado.");
 	}
 
 	public Leitor consultarLeitorUsuario(String usuario) throws NoSuchElementException {
