@@ -1,13 +1,10 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 public class Biblioteca {
 	private List<Livro> livros = new ArrayList<Livro>();
-	private Map<Integer, String> categorias = new HashMap<Integer, String>();
+	private List<Categoria> categorias = new ArrayList<Categoria>();
 	private List<Leitor> leitores = new ArrayList<Leitor>();
 
 	public Biblioteca() {
@@ -16,13 +13,7 @@ public class Biblioteca {
 
 	// LIVRO
 
-	public void adicionarLivro(Livro livro) throws IllegalArgumentException {
-		for (Livro l : this.livros) {
-			if (l.getCodigo() == livro.getCodigo()) {
-				throw new IllegalArgumentException("Livro com o código " + livro.getCodigo() + " já existe.");
-			}
-		}
-
+	public void adicionarLivro(Livro livro) {
 		this.livros.add(livro);
 	}
 
@@ -34,8 +25,14 @@ public class Biblioteca {
 		this.livros.remove(index);
 	}
 
-	public void editarLivro(int index, Livro livro) {
-		this.livros.set(index, livro);
+	public void editarLivro(Livro livro) {
+		for (int i = 0; i < this.livros.size(); i++) {
+			if (this.livros.get(i).getCodigo() == livro.getCodigo()) {
+				this.livros.set(i, livro);
+				return;
+			}
+		}
+		throw new NoSuchElementException("Categoria com código " + livro.getCodigo() + " não encontrada.");
 	}
 
 	public Livro consultarLivroCodigo(int codigo) throws NoSuchElementException {
@@ -49,9 +46,9 @@ public class Biblioteca {
 	}
 
 	public Livro consultarLivroTitulo(String titulo) throws NoSuchElementException {
-		for (Livro livro : livros) {
-			if (livro.getTitulo().equals(titulo)) {
-				return livro;
+		for (Livro l : livros) {
+			if (l.getTitulo().equals(titulo)) {
+				return l;
 			}
 		}
 
@@ -62,53 +59,75 @@ public class Biblioteca {
 		return this.livros;
 	}
 
+	public boolean livroExiste(int codigo) {
+		for (Livro l : livros) {
+			if (l.getCodigo() == codigo) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	// CATEGORIA
 
-	public void adicionarCategoria(int codigo, String descricao) throws IllegalArgumentException {
-		if (this.categorias.containsKey(codigo)) {
-			throw new IllegalArgumentException("Categoria com código " + codigo + " já existe.");
-		}
-		this.categorias.put(codigo, descricao);
+	public void adicionarCategoria(Categoria categoria) {
+		this.categorias.add(categoria);
 	}
 
 	public void removerCategoria(int codigo) throws NoSuchElementException {
-		if (categorias.remove(codigo) == null) {
-			throw new NoSuchElementException("Categoria com código " + codigo + " não encontrada.");
-		}
-	}
-
-	public void editarCategoria(int codigo, String descricao) {
-		this.categorias.put(codigo, descricao);
-	}
-
-	public Map.Entry<Integer, String> consultarCategoriaCodigo(int codigo) throws NoSuchElementException {
-		if (categorias.containsKey(codigo)) {
-			return Map.entry(codigo, categorias.get(codigo));
+		for (int i = 0; i < this.categorias.size(); i++) {
+			if (this.categorias.get(i).getCodigo() == codigo) {
+				this.categorias.remove(i);
+				return;
+			}
 		}
 		throw new NoSuchElementException("Categoria com código " + codigo + " não encontrada.");
 	}
 
-	public Map.Entry<Integer, String> consultarCategoriaDescricao(String descricao) throws NoSuchElementException {
-		for (Map.Entry<Integer, String> entry : categorias.entrySet()) {
-			if (entry.getValue().equals(descricao)) {
-				return entry;
+	public void editarCategoria(Categoria categoria) throws NoSuchElementException {
+		for (int i = 0; i < this.categorias.size(); i++) {
+			if (this.categorias.get(i).getCodigo() == categoria.getCodigo()) {
+				this.categorias.set(i, categoria);
+				return;
+			}
+		}
+		throw new NoSuchElementException("Categoria com código " + categoria.getCodigo() + " não encontrada.");
+	}
+
+	public Categoria consultarCategoriaCodigo(int codigo) throws NoSuchElementException {
+		for (Categoria c : categorias) {
+			if (c.getCodigo() == codigo) {
+				return c;
+			}
+		}
+		throw new NoSuchElementException("Categoria com código " + codigo + " não encontrada.");
+	}
+
+	public Categoria consultarCategoriaDescricao(String descricao) throws NoSuchElementException {
+		for (Categoria c : categorias) {
+			if (c.getDescricao().equals(descricao)) {
+				return c;
 			}
 		}
 		throw new NoSuchElementException("Categoria com descrição '" + descricao + "' não encontrada.");
 	}
 
-	public Set<Map.Entry<Integer, String>> consultarCategorias() {
-		return categorias.entrySet();
+	public List<Categoria> consultarCategorias() {
+		return this.categorias;
+	}
+
+	public boolean categoriaExiste(int codigo) {
+		for (Categoria c : categorias) {
+			if (c.getCodigo() == codigo) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	// LEITOR
 
-	public void adicionarLeitor(Leitor leitor) throws IllegalArgumentException {
-		for (Leitor l : leitores) {
-			if (l.getUsuario().equals(leitor.getUsuario())) {
-				throw new IllegalArgumentException("Leitor com o usuário " + leitor.getUsuario() + " já existe.");
-			}
-		}
+	public void adicionarLeitor(Leitor leitor) {
 		leitores.add(leitor);
 	}
 
@@ -147,6 +166,15 @@ public class Biblioteca {
 
 	public List<Leitor> consultarLeitores() {
 		return leitores;
+	}
+
+	public boolean leitorExiste(String usuario) {
+		for (Leitor l : leitores) {
+			if (l.getUsuario().equals(usuario)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	// AUTENTICAÇÂO

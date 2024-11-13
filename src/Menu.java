@@ -1,9 +1,7 @@
 import java.util.InputMismatchException;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
-import java.util.Set;
 
 public class Menu {
 	private static Scanner sc;
@@ -196,12 +194,7 @@ public class Menu {
 				codigo = sc.nextInt();
 				sc.nextLine();
 
-				for (Entry<Integer, String> c : biblioteca.consultarCategorias()) {
-					if (c.getKey().equals(codigo)) {
-						categoriaExiste = true;
-						break;
-					}
-				}
+				categoriaExiste = biblioteca.categoriaExiste(codigo);
 
 				if (categoriaExiste) {
 					System.out.println("O código informado já pertence a outra categoria.");
@@ -212,25 +205,21 @@ public class Menu {
 			System.out.println("Digite a descrição da categoria: ");
 			String descricao = sc.nextLine();
 
-			biblioteca.adicionarCategoria(codigo, descricao);
+			biblioteca.adicionarCategoria(new Categoria(codigo, descricao));
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}
 
 	public void removerCategoria() {
-		System.out.println("Digite o código da categoria que deseja remover:");
-		int codigo = sc.nextInt();
-		sc.nextLine();
-
-		for (Entry<Integer, String> c : biblioteca.consultarCategorias()) {
-			if (c.getKey().equals(codigo)) {
-				biblioteca.removerCategoria(codigo);
-				return;
-			}
+		try {
+			System.out.println("Digite o código da categoria que deseja remover:");
+			int codigo = sc.nextInt();
+			sc.nextLine();
+			biblioteca.removerCategoria(codigo);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
 		}
-
-		System.out.println("A categoria de código " + codigo + " não foi encontrada.");
 	}
 
 	public void editarCategoria() {
@@ -246,14 +235,10 @@ public class Menu {
 			System.out.println("Digite a descrição da categoria");
 			String descricao = sc.nextLine();
 
-			for (Entry<Integer, String> c : biblioteca.consultarCategorias()) {
-				if (c.getKey().equals(codigo)) {
-					biblioteca.editarCategoria(codigo, descricao);
-					return;
-				}
-			}
-		} catch (Exception e) {
+			biblioteca.editarCategoria(new Categoria(codigo, descricao));
 
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
 		}
 	}
 
@@ -270,25 +255,16 @@ public class Menu {
 		switch (op) {
 		case 1:
 			try {
-				int codigo = 0;
-
 				System.out.println("Digite o código da categoria:");
+				int codigo = sc.nextInt();
+				sc.nextLine();
 
-				try {
-					codigo = sc.nextInt();
-					sc.nextLine();
-				} catch (InputMismatchException e) {
-					System.out.println("Entrada inválida! Por favor, insira um número inteiro.");
-					sc.nextLine();
-					return;
-				}
+				Categoria categoria = biblioteca.consultarCategoriaCodigo(codigo);
 
-				Entry<Integer, String> categoria = biblioteca.consultarCategoriaCodigo(codigo);
+				System.out.println(" Código - " + categoria.getCodigo());
+				System.out.println(" Descrição - " + categoria.getDescricao());
 
-				System.out.println(" Código - " + categoria.getKey());
-				System.out.println(" Descrição - " + categoria.getValue());
-
-			} catch (NoSuchElementException e) {
+			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
 
@@ -297,24 +273,24 @@ public class Menu {
 			try {
 				System.out.println("Digite a descrição da categoria:");
 				String descricao = sc.next().trim();
-				Entry<Integer, String> categoria = biblioteca.consultarCategoriaDescricao(descricao);
+				Categoria categoria = biblioteca.consultarCategoriaDescricao(descricao);
 
-				System.out.println(" Código - " + categoria.getKey());
-				System.out.println(" Descrição - " + categoria.getValue());
+				System.out.println(" Código - " + categoria.getCodigo());
+				System.out.println(" Descrição - " + categoria.getDescricao());
 
-			} catch (NoSuchElementException e) {
+			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
 
 			break;
 		case 3:
 			try {
-				Set<Entry<Integer, String>> categorias = biblioteca.consultarCategorias();
+				List<Categoria> categorias = biblioteca.consultarCategorias();
 				System.out.println("Código\t\tDescrição");
-				for (Entry<Integer, String> c : categorias) {
-					System.out.println(c.getKey() + "\t\t" + c.getValue());
+				for (Categoria c : categorias) {
+					System.out.println(c.getCodigo() + "\t\t" + c.getDescricao());
 				}
-			} catch (NoSuchElementException e) {
+			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
 
@@ -327,28 +303,10 @@ public class Menu {
 	public void adicionarLivro() {
 
 		try {
-			Entry<Integer, String> categoria = null;
-			boolean codigoLivroExiste;
-			int codigo, codigoCategoria;
-
-			do {
-				codigoLivroExiste = false;
-				System.out.println("Digite o código do livro: ");
-				codigo = sc.nextInt();
-				sc.nextLine();
-
-				for (Livro l : biblioteca.consultarLivros()) {
-					if (l.getCodigo() == codigo) {
-						codigoLivroExiste = true;
-						break;
-					}
-				}
-
-				if (codigoLivroExiste) {
-					System.out.println("O código do livro informado já existe.");
-				}
-
-			} while (codigoLivroExiste);
+			System.out.println("Digite o código do livro: ");
+			int codigo = sc.nextInt();
+			sc.nextLine();
+			biblioteca.consultarLivroCodigo(codigo);
 
 			System.out.println("Digite o título do livro: ");
 			String titulo = sc.nextLine();
@@ -360,32 +318,12 @@ public class Menu {
 			int vincularCategoria = sc.nextInt();
 			sc.nextLine();
 
+			Categoria categoria = null;
 			if (vincularCategoria == 1) {
-
-				if (biblioteca.consultarCategorias().isEmpty()) {
-					System.out.println("Antes de cadastrar um livro, cadastre uma categoria.");
-					return;
-				}
-
-				do {
-
-					System.out.println("Digite o código da categoria do livro: ");
-					codigoCategoria = sc.nextInt();
-					sc.nextLine();
-
-					for (Entry<Integer, String> c : biblioteca.consultarCategorias()) {
-						if (c.getKey().equals(codigoCategoria)) {
-							categoria = c;
-							break;
-						}
-					}
-
-					if (categoria == null) {
-						System.out.println("O código da categoria informada não existe.");
-					}
-
-				} while (categoria == null);
-
+				System.out.println("Digite o código da categoria do livro: ");
+				int codigoCategoria = sc.nextInt();
+				sc.nextLine();
+				categoria = biblioteca.consultarCategoriaCodigo(codigoCategoria);
 			}
 
 			System.out.println("Digite a quantidade disponível do livro: ");
@@ -421,26 +359,11 @@ public class Menu {
 	}
 
 	public void editarLivro() {
-		Livro livro = null;
-		int indexLivro;
-
 		System.out.println("Digite o código do livro que deseja editar:");
-
 		int codigo = sc.nextInt();
 		sc.nextLine();
 
-		for (indexLivro = 0; indexLivro < biblioteca.consultarLivros().size(); indexLivro++) {
-			Livro l = biblioteca.consultarLivros().get(indexLivro);
-			if (l.getCodigo() == codigo) {
-				livro = l;
-				break;
-			}
-		}
-
-		if (livro == null) {
-			System.out.println("O código do livro informado não existe.");
-			return;
-		}
+		Livro livro = biblioteca.consultarLivroCodigo(codigo);
 
 		System.out.println(" Selecione a opção que deseja editar:");
 		System.out.println(" 1 - Título");
@@ -465,22 +388,9 @@ public class Menu {
 		case 3:
 			System.out.println("Digite o código da categoria:");
 			int codigoCategoria = sc.nextInt();
-			boolean codigoCategoriaExiste = false;
 			sc.nextLine();
-
-			for (Entry<Integer, String> c : biblioteca.consultarCategorias()) {
-				if (c.getKey().equals(codigoCategoria)) {
-					codigoCategoriaExiste = true;
-					livro.setCategoria(c);
-					break;
-				}
-			}
-
-			if (!codigoCategoriaExiste) {
-				System.out.println("O código da categoria informado não existe.");
-				return;
-			}
-
+			Categoria categoria = biblioteca.consultarCategoriaCodigo(codigoCategoria);
+			livro.setCategoria(categoria);
 			break;
 		case 4:
 			System.out.println("Digite a quantidade disponível: ");
@@ -490,7 +400,7 @@ public class Menu {
 			break;
 		}
 
-		biblioteca.editarLivro(indexLivro, livro);
+		biblioteca.editarLivro(livro);
 	}
 
 	public void consultarLivro() {
@@ -557,8 +467,8 @@ public class Menu {
 					System.out.println("Código\t\tTítulo\t\tAutor\t\tCategoria\t\tQuantidade Disponível");
 					for (Livro l : livros) {
 						System.out.println(l.getCodigo() + "\t\t" + l.getTitulo() + "\t\t" + l.getAutor() + "\t\t"
-								+ (l.getCategoria() != null ? l.getCategoria().getValue() : "Sem categoria") + "\t\t"
-								+ l.getQuantidadeDisponivel());
+								+ (l.getCategoria() != null ? l.getCategoria().getDescricao() : "Sem categoria")
+								+ "\t\t" + l.getQuantidadeDisponivel());
 					}
 
 				} catch (NoSuchElementException e) {
@@ -577,8 +487,20 @@ public class Menu {
 
 	public void adicionarLeitor() {
 		try {
-			System.out.println("Digite o nome de usuário do leitor: ");
-			String usuario = sc.nextLine();
+			boolean leitorExiste;
+			String usuario;
+			do {
+
+				System.out.println("Digite o nome de usuário do leitor: ");
+				usuario = sc.nextLine();
+
+				leitorExiste = biblioteca.leitorExiste(usuario);
+
+				if (leitorExiste) {
+					System.out.println("O usuário de nome " + usuario + " já existe");
+				}
+
+			} while (leitorExiste);
 
 			System.out.println("Digite a senha do leitor: ");
 			String senha = sc.nextLine();
@@ -677,11 +599,11 @@ public class Menu {
 				break;
 			case 2:
 				System.out.println("Usuário");
-				
-				for(Leitor l : biblioteca.consultarLeitores()) {
+
+				for (Leitor l : biblioteca.consultarLeitores()) {
 					System.out.println(l.getUsuario());
 				}
-				
+
 				break;
 			default:
 				System.out.println("Opção inválida.");

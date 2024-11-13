@@ -1,9 +1,8 @@
-import java.util.Map.Entry;
 
 public class Livro {
 	private int codigo;
 	private String titulo;
-	private Entry<Integer, String> categoria;
+	private Categoria categoria;
 	private int quantidadeDisponivel;
 	private String autor;
 
@@ -11,7 +10,7 @@ public class Livro {
 
 	}
 
-	public Livro(int codigo, String titulo, Entry<Integer, String> categoria, int quantidadeDisponivel, String autor) {
+	public Livro(int codigo, String titulo, Categoria categoria, int quantidadeDisponivel, String autor) {
 		this.codigo = codigo;
 		this.titulo = titulo;
 		this.categoria = categoria;
@@ -35,11 +34,11 @@ public class Livro {
 		this.titulo = titulo;
 	}
 
-	public Entry<Integer, String> getCategoria() {
+	public Categoria getCategoria() {
 		return categoria;
 	}
 
-	public void setCategoria(Entry<Integer, String> categoria) {
+	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
 	}
 
