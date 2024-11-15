@@ -1,9 +1,15 @@
+import com.google.gson.annotations.SerializedName;
 
 public class Livro {
+	@SerializedName("codigo")
 	private int codigo;
+	@SerializedName("titulo")
 	private String titulo;
+	@SerializedName("categoria")
 	private Categoria categoria;
+	@SerializedName("quantidadeDisponivel")
 	private int quantidadeDisponivel;
+	@SerializedName("autor")
 	private String autor;
 
 	public Livro() {

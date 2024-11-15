@@ -1,6 +1,9 @@
+import com.google.gson.annotations.SerializedName;
 
 public class Categoria {
+	@SerializedName("codigo")
 	private int codigo;
+	@SerializedName("descricao")
 	private String descricao;
 
 	public Categoria() {

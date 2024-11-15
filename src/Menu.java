@@ -14,20 +14,21 @@ public class Menu {
 	public static void main(String[] args) {
 		Menu menu = new Menu();
 		sc = new Scanner(System.in);
-		// menu.autenticacao();
-		menu.menuGeral();
+		menu.menuGeral(menu.autenticacao());
 		sc.close();
 	}
 
 	// MENU
 
-	public void menuGeral() {
+	public void menuGeral(int nivelUsuario) {
 		int op = -1;
 
 		do {
 			System.out.println(" 1 - Livros");
 			System.out.println(" 2 - Categorias");
-			System.out.println(" 3 - Leitores");
+			if (nivelUsuario != 2) {
+				System.out.println(" 3 - Leitores");
+			}
 			System.out.println(" 0 - sair ");
 
 			if (sc.hasNextInt()) {
@@ -36,13 +37,15 @@ public class Menu {
 
 				switch (op) {
 				case 1:
-					menuLivros();
+					menuLivros(nivelUsuario);
 					break;
 				case 2:
-					menuCategorias();
+					menuCategorias(nivelUsuario);
 					break;
 				case 3:
-					menuLeitores();
+					if (nivelUsuario != 2) {
+						menuLeitores();
+					}
 					break;
 				case 0:
 					System.out.println("Saindo...");
@@ -58,13 +61,15 @@ public class Menu {
 		} while (op != 0);
 	}
 
-	public void menuLivros() {
+	public void menuLivros(int nivelUsuario) {
 		int op = -1;
 
 		do {
-			System.out.println(" 1 - Adicionar");
-			System.out.println(" 2 - Remover");
-			System.out.println(" 3 - Editar");
+			if (nivelUsuario != 2) {
+				System.out.println(" 1 - Adicionar");
+				System.out.println(" 2 - Remover");
+				System.out.println(" 3 - Editar");
+			}
 			System.out.println(" 4 - Consultar");
 			System.out.println(" 0 - sair ");
 
@@ -74,13 +79,19 @@ public class Menu {
 
 				switch (op) {
 				case 1:
-					adicionarLivro();
+					if (nivelUsuario != 2) {
+						adicionarLivro();
+					}
 					break;
 				case 2:
-					removerLivro();
+					if (nivelUsuario != 2) {
+						removerLivro();
+					}
 					break;
 				case 3:
-					editarLivro();
+					if (nivelUsuario != 2) {
+						editarLivro();
+					}
 					break;
 				case 4:
 					consultarLivro();
@@ -99,13 +110,15 @@ public class Menu {
 		} while (op != 0);
 	}
 
-	public void menuCategorias() {
+	public void menuCategorias(int nivelUsuario) {
 		int op = -1;
 
 		do {
-			System.out.println(" 1 - Adicionar");
-			System.out.println(" 2 - Remover");
-			System.out.println(" 3 - Editar");
+			if (nivelUsuario != 2) {
+				System.out.println(" 1 - Adicionar");
+				System.out.println(" 2 - Remover");
+				System.out.println(" 3 - Editar");
+			}
 			System.out.println(" 4 - Consultar");
 			System.out.println(" 0 - sair ");
 
@@ -115,13 +128,19 @@ public class Menu {
 
 				switch (op) {
 				case 1:
-					adicionarCategoria();
+					if (nivelUsuario != 2) {
+						adicionarCategoria();
+					}
 					break;
 				case 2:
-					removerCategoria();
+					if (nivelUsuario != 2) {
+						removerCategoria();
+					}
 					break;
 				case 3:
-					editarCategoria();
+					if (nivelUsuario != 2) {
+						editarCategoria();
+					}
 					break;
 				case 4:
 					consultarCategoria();
@@ -568,7 +587,7 @@ public class Menu {
 				sc.nextLine();
 			}
 
-			biblioteca.editarLeitor(leitor);
+			biblioteca.editarLeitor(leitor, usuario);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -612,8 +631,8 @@ public class Menu {
 
 	// AUTENTICAÇÂO
 
-	public void autenticacao() {
-		boolean usuarioExiste = false;
+	public int autenticacao() {
+		int nivelUsuario = 0;
 
 		do {
 			System.out.print("Digite o nome de usuário: ");
@@ -622,12 +641,14 @@ public class Menu {
 			System.out.print("Digite a senha: ");
 			String senha = sc.nextLine();
 
-			usuarioExiste = biblioteca.autenticacao(usuario, senha);
+			nivelUsuario = biblioteca.autenticacao(usuario, senha);
 
-			if (!usuarioExiste) {
+			if (nivelUsuario == 0) {
 				System.out.println("Usuário ou senha incorretos.");
 			}
 
-		} while (!usuarioExiste);
+		} while (nivelUsuario == 0);
+
+		return nivelUsuario;
 	}
 }

@@ -14,30 +14,47 @@ public class Biblioteca {
 	// LIVRO
 
 	public void adicionarLivro(Livro livro) {
-		this.livros.add(livro);
+		List<Livro> livros = Arquivo.lerArquivo(Livro.class);
+		livros.add(livro);
+		Arquivo.escreverArquivo(livros, Livro.class);
 	}
 
-	public void removerLivro(int codigo) throws IndexOutOfBoundsException {
-		for (int i = 0; i < this.livros.size(); i++) {
-			if (this.livros.get(i).getCodigo() == codigo) {
-				this.livros.remove(i);
+	public void removerLivro(int codigo) throws NoSuchElementException {
+		List<Livro> livros = Arquivo.lerArquivo(Livro.class);
+		Livro livroRemover = null;
+
+		for (Livro livro : livros) {
+			if (livro.getCodigo() == codigo) {
+				livroRemover = livro;
+				break;
+			}
+		}
+
+		if (livroRemover != null) {
+			livros.remove(livroRemover);
+			Arquivo.escreverArquivo(livros, Livro.class);
+		} else {
+			throw new NoSuchElementException("Livro com código " + codigo + " não encontrado.");
+		}
+	}
+
+	public void editarLivro(Livro livro) throws NoSuchElementException {
+		List<Livro> livros = Arquivo.lerArquivo(Livro.class);
+
+		for (int i = 0; i < livros.size(); i++) {
+			if (livros.get(i).getCodigo() == livro.getCodigo()) {
+				livros.set(i, livro);
+				Arquivo.escreverArquivo(livros, Livro.class);
 				return;
 			}
 		}
-		throw new NoSuchElementException("Livro com código " + codigo + " não encontrada.");
-	}
 
-	public void editarLivro(Livro livro) {
-		for (int i = 0; i < this.livros.size(); i++) {
-			if (this.livros.get(i).getCodigo() == livro.getCodigo()) {
-				this.livros.set(i, livro);
-				return;
-			}
-		}
-		throw new NoSuchElementException("Categoria com código " + livro.getCodigo() + " não encontrada.");
+		throw new NoSuchElementException("Livro com código " + livro.getCodigo() + " não encontrado.");
 	}
 
 	public Livro consultarLivroCodigo(int codigo) throws NoSuchElementException {
+		List<Livro> livros = Arquivo.lerArquivo(Livro.class);
+
 		for (Livro livro : livros) {
 			if (livro.getCodigo() == codigo) {
 				return livro;
@@ -48,17 +65,19 @@ public class Biblioteca {
 	}
 
 	public Livro consultarLivroTitulo(String titulo) throws NoSuchElementException {
-		for (Livro l : livros) {
-			if (l.getTitulo().equals(titulo)) {
-				return l;
+		List<Livro> livros = Arquivo.lerArquivo(Livro.class);
+
+		for (Livro livro : livros) {
+			if (livro.getTitulo().equals(titulo)) {
+				return livro;
 			}
 		}
 
-		throw new NoSuchElementException("Livro " + titulo + " não encontrado.");
+		throw new NoSuchElementException("Livro com título '" + titulo + "' não encontrado.");
 	}
 
 	public List<Livro> consultarLivros() {
-		return this.livros;
+		return Arquivo.lerArquivo(Livro.class);
 	}
 
 	public boolean livroExiste(int codigo) {
@@ -73,49 +92,70 @@ public class Biblioteca {
 	// CATEGORIA
 
 	public void adicionarCategoria(Categoria categoria) {
-		this.categorias.add(categoria);
+		List<Categoria> categorias = Arquivo.lerArquivo(Categoria.class);
+		categorias.add(categoria);
+		Arquivo.escreverArquivo(categorias, Categoria.class);
 	}
 
 	public void removerCategoria(int codigo) throws NoSuchElementException {
-		for (int i = 0; i < this.categorias.size(); i++) {
-			if (this.categorias.get(i).getCodigo() == codigo) {
-				this.categorias.remove(i);
-				return;
+		List<Categoria> categorias = Arquivo.lerArquivo(Categoria.class);
+		Categoria categoriaRemover = null;
+
+		for (Categoria categoria : categorias) {
+			if (categoria.getCodigo() == codigo) {
+				categoriaRemover = categoria;
+				break;
 			}
 		}
-		throw new NoSuchElementException("Categoria com código " + codigo + " não encontrada.");
+
+		if (categoriaRemover != null) {
+			categorias.remove(categoriaRemover);
+			Arquivo.escreverArquivo(categorias, Categoria.class);
+		} else {
+			throw new NoSuchElementException("Categoria com código " + codigo + " não encontrada.");
+		}
 	}
 
 	public void editarCategoria(Categoria categoria) throws NoSuchElementException {
-		for (int i = 0; i < this.categorias.size(); i++) {
-			if (this.categorias.get(i).getCodigo() == categoria.getCodigo()) {
-				this.categorias.set(i, categoria);
+		List<Categoria> categorias = Arquivo.lerArquivo(Categoria.class);
+
+		for (int i = 0; i < categorias.size(); i++) {
+			if (categorias.get(i).getCodigo() == categoria.getCodigo()) {
+				categorias.set(i, categoria);
+				Arquivo.escreverArquivo(categorias, Categoria.class);
 				return;
 			}
 		}
+
 		throw new NoSuchElementException("Categoria com código " + categoria.getCodigo() + " não encontrada.");
 	}
 
 	public Categoria consultarCategoriaCodigo(int codigo) throws NoSuchElementException {
-		for (Categoria c : categorias) {
-			if (c.getCodigo() == codigo) {
-				return c;
+		List<Categoria> categorias = Arquivo.lerArquivo(Categoria.class);
+
+		for (Categoria categoria : categorias) {
+			if (categoria.getCodigo() == codigo) {
+				return categoria;
 			}
 		}
+
 		throw new NoSuchElementException("Categoria com código " + codigo + " não encontrada.");
 	}
 
 	public Categoria consultarCategoriaDescricao(String descricao) throws NoSuchElementException {
-		for (Categoria c : categorias) {
-			if (c.getDescricao().equals(descricao)) {
-				return c;
+		List<Categoria> categorias = Arquivo.lerArquivo(Categoria.class);
+
+		for (Categoria categoria : categorias) {
+			if (categoria.getDescricao().equals(descricao)) {
+				return categoria;
 			}
 		}
+
 		throw new NoSuchElementException("Categoria com descrição '" + descricao + "' não encontrada.");
 	}
 
 	public List<Categoria> consultarCategorias() {
-		return this.categorias;
+		return Arquivo.lerArquivo(Categoria.class);
 	}
 
 	public boolean categoriaExiste(int codigo) {
@@ -130,35 +170,52 @@ public class Biblioteca {
 	// LEITOR
 
 	public void adicionarLeitor(Leitor leitor) {
+		leitores = Arquivo.lerArquivo(Leitor.class);
 		leitores.add(leitor);
+		Arquivo.escreverArquivo(leitores, Leitor.class);
 	}
 
 	public void removerLeitor(String usuario) throws NoSuchElementException {
+		leitores = Arquivo.lerArquivo(Leitor.class);
 		Leitor leitorRemover = null;
+
 		for (Leitor l : leitores) {
 			if (l.getUsuario().equals(usuario)) {
 				leitorRemover = l;
 				break;
 			}
 		}
+
 		if (leitorRemover != null) {
 			leitores.remove(leitorRemover);
+			Arquivo.escreverArquivo(leitores, Leitor.class);
 		} else {
 			throw new NoSuchElementException("Leitor com usuário " + usuario + " não encontrado.");
 		}
 	}
 
-	public void editarLeitor(Leitor leitor) throws NoSuchElementException {
-		for (int i = 0; i < this.leitores.size(); i++) {
-			if (this.leitores.get(i).getUsuario().equals(leitor.getUsuario())) {
-				this.leitores.set(i, leitor);
-				return;
+	public void editarLeitor(Leitor leitor, String usuario) throws NoSuchElementException {
+		leitores = Arquivo.lerArquivo(Leitor.class);
+		boolean encontrado = false;
+
+		for (int i = 0; i < leitores.size(); i++) {
+			if (leitores.get(i).getUsuario().equals(usuario)) {
+				leitores.set(i, leitor);
+				encontrado = true;
+				break;
 			}
 		}
-		throw new NoSuchElementException("Leitor com usuário " + leitor.getUsuario() + " não encontrado.");
+
+		if (!encontrado) {
+			throw new NoSuchElementException("Leitor com usuário " + leitor.getUsuario() + " não encontrado.");
+		}
+
+		Arquivo.escreverArquivo(leitores, Leitor.class);
 	}
 
 	public Leitor consultarLeitorUsuario(String usuario) throws NoSuchElementException {
+		leitores = consultarLeitores();
+
 		for (Leitor l : leitores) {
 			if (l.getUsuario().equals(usuario)) {
 				return l;
@@ -168,10 +225,12 @@ public class Biblioteca {
 	}
 
 	public List<Leitor> consultarLeitores() {
-		return leitores;
+		return Arquivo.lerArquivo(Leitor.class);
 	}
 
 	public boolean leitorExiste(String usuario) {
+		leitores = consultarLeitores();
+
 		for (Leitor l : leitores) {
 			if (l.getUsuario().equals(usuario)) {
 				return true;
@@ -182,18 +241,20 @@ public class Biblioteca {
 
 	// AUTENTICAÇÂO
 
-	public boolean autenticacao(String usuario, String senha) {
+	public int autenticacao(String usuario, String senha) {
+		List<Leitor> leitores = consultarLeitores();
+
 		if (Administrador.getUsuario().equals(usuario) && Administrador.getSenha().equals(senha)) {
-			return true;
+			return 1;
 		}
 
 		for (Leitor l : leitores) {
 			if (l.getUsuario().equals(usuario) && l.getSenha().equals(senha)) {
-				return true;
+				return 2;
 			}
 		}
 
-		return false;
+		return 0;
 	}
 
 }

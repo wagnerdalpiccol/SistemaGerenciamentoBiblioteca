@@ -1,6 +1,9 @@
+import com.google.gson.annotations.SerializedName;
 
 public class Leitor {
+	@SerializedName("usuario")
 	private String usuario;
+	@SerializedName("senha")
 	private String senha;
 
 	public Leitor() {
