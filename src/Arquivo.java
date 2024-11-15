@@ -25,6 +25,8 @@ public class Arquivo {
 			nomeArquivo = "livro.json";
 		} else if (clazz == Categoria.class) {
 			nomeArquivo = "categoria.json";
+		} else if (clazz == Emprestimo.class) {
+			nomeArquivo = "emprestimo.json";
 		} else {
 			throw new IllegalArgumentException("Tipo de classe não suportado: " + clazz.getName());
 		}
@@ -49,6 +51,8 @@ public class Arquivo {
 			nomeArquivo = "livro.json";
 		} else if (clazz == Categoria.class) {
 			nomeArquivo = "categoria.json";
+		} else if (clazz == Emprestimo.class) {
+			nomeArquivo = "emprestimo.json";
 		} else {
 			throw new IllegalArgumentException("Tipo de classe não suportado: " + clazz.getName());
 		}

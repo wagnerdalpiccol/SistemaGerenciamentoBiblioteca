@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -6,6 +7,8 @@ public class Biblioteca {
 	private List<Livro> livros = new ArrayList<Livro>();
 	private List<Categoria> categorias = new ArrayList<Categoria>();
 	private List<Leitor> leitores = new ArrayList<Leitor>();
+	private List<Emprestimo> emprestimos = new ArrayList<Emprestimo>();
+	private String usuarioAtual;
 
 	public Biblioteca() {
 
@@ -239,11 +242,54 @@ public class Biblioteca {
 		return false;
 	}
 
+	// EMPRÉSTIMO
+
+	public void realizarEmprestimo() {
+
+	}
+
+	public List<Emprestimo> consultarEmprestimoPorCodigo(int codigo) {
+		List<Emprestimo> todosEmprestimos = Arquivo.lerArquivo(Emprestimo.class);
+
+		for (Emprestimo emprestimo : todosEmprestimos) {
+			if (emprestimo.getLivro().getCodigo() == codigo) {
+				emprestimos.add(emprestimo);
+			}
+		}
+
+		return emprestimos;
+	}
+
+	public List<Emprestimo> consultarEmprestimoPorTitulo(String titulo) {
+		List<Emprestimo> todosEmprestimos = Arquivo.lerArquivo(Emprestimo.class);
+
+		for (Emprestimo emprestimo : todosEmprestimos) {
+			if (emprestimo.getLivro().getTitulo().equalsIgnoreCase(titulo)) {
+				emprestimos.add(emprestimo);
+			}
+		}
+
+		return emprestimos;
+	}
+
+	public List<Emprestimo> consultarEmprestimoPorDatas(Date dataInicio, Date dataFim) {
+		List<Emprestimo> todosEmprestimos = Arquivo.lerArquivo(Emprestimo.class);
+
+		for (Emprestimo emprestimo : todosEmprestimos) {
+			if (!emprestimo.getDataFim().before(dataInicio) && !emprestimo.getDataInicio().after(dataFim)) {
+				emprestimos.add(emprestimo);
+			}
+		}
+
+		return emprestimos;
+	}
+
 	// AUTENTICAÇÂO
 
 	public int autenticacao(String usuario, String senha) {
 		List<Leitor> leitores = consultarLeitores();
-
+		usuarioAtual = usuario;
+		
 		if (Administrador.getUsuario().equals(usuario) && Administrador.getSenha().equals(senha)) {
 			return 1;
 		}

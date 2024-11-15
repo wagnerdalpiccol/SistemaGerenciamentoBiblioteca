@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -7,7 +9,7 @@ public class Menu {
 	private static Scanner sc;
 	private Biblioteca biblioteca = new Biblioteca();
 
-	public Menu() {
+ 	public Menu() {
 
 	}
 
@@ -29,6 +31,7 @@ public class Menu {
 			if (nivelUsuario != 2) {
 				System.out.println(" 3 - Leitores");
 			}
+			System.out.println(" 4 - Empréstimo");
 			System.out.println(" 0 - sair ");
 
 			if (sc.hasNextInt()) {
@@ -46,6 +49,9 @@ public class Menu {
 					if (nivelUsuario != 2) {
 						menuLeitores();
 					}
+					break;
+				case 4:
+					menuEmprestimo();
 					break;
 				case 0:
 					System.out.println("Saindo...");
@@ -185,6 +191,39 @@ public class Menu {
 					break;
 				case 4:
 					consultarLeitor();
+					break;
+				case 0:
+					System.out.println("Saindo...");
+					break;
+				default:
+					System.out.println("Opção inválida, tente novamente.");
+					break;
+				}
+			} else {
+				System.out.println("Por favor, digite um número válido.");
+				sc.nextLine();
+			}
+		} while (op != 0);
+	}
+
+	public void menuEmprestimo() {
+		int op = -1;
+
+		do {
+			System.out.println(" 1 - Realizar Empréstimo");
+			System.out.println(" 2 - Consultar");
+			System.out.println(" 0 - sair ");
+
+			if (sc.hasNextInt()) {
+				op = sc.nextInt();
+				sc.nextLine();
+
+				switch (op) {
+				case 1:
+					realizarEmprestimo();
+					break;
+				case 2:
+					consultarEmprestimo();
 					break;
 				case 0:
 					System.out.println("Saindo...");
@@ -629,6 +668,73 @@ public class Menu {
 		}
 	}
 
+	// EMPRÉSTIMO
+
+	public void realizarEmprestimo() {
+
+	}
+
+	public void consultarEmprestimo() {
+		int op;
+
+		System.out.println(" 1 - Consultar Por Código");
+		System.out.println(" 2 - Consultar Por Título");
+		System.out.println(" 3 - Consultar Por Datas");
+		if (sc.hasNextInt()) {
+			op = sc.nextInt();
+			sc.nextLine();
+
+			switch (op) {
+			case 1:
+				try {
+					System.out.println("Digite o código do livro: ");
+					if (sc.hasNextInt()) {
+						int codigo = sc.nextInt();
+						sc.nextLine();
+						biblioteca.consultarEmprestimoPorCodigo(codigo);
+					}
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+				}
+
+				break;
+			case 2:
+				try {
+					System.out.println("Digite o título do livro: ");
+					String titulo = sc.nextLine();
+					biblioteca.consultarEmprestimoPorTitulo(titulo);
+
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+				}
+
+				break;
+			case 3:
+				try {
+					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+					System.out.println("Digite a data de início do empréstimo do livro (dd/MM/yyyy): ");
+					String dataInicio = sc.nextLine();
+					System.out.println("Digite a data de fim do empréstimo do livro (dd/MM/yyyy): ");
+					String dataFim = sc.nextLine();
+
+					Date dtInicio = sdf.parse(dataInicio);
+					Date dtFim = sdf.parse(dataFim);
+
+					biblioteca.consultarEmprestimoPorDatas(dtInicio, dtFim);
+
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+				}
+
+				break;
+			}
+		} else {
+			System.out.println("Número válido digitado.");
+			sc.nextLine();
+		}
+	}
+
 	// AUTENTICAÇÂO
 
 	public int autenticacao() {
@@ -637,7 +743,7 @@ public class Menu {
 		do {
 			System.out.print("Digite o nome de usuário: ");
 			String usuario = sc.nextLine();
-
+			
 			System.out.print("Digite a senha: ");
 			String senha = sc.nextLine();
 
