@@ -8,7 +8,7 @@ public class Biblioteca {
 	private List<Categoria> categorias = new ArrayList<Categoria>();
 	private List<Leitor> leitores = new ArrayList<Leitor>();
 	private List<Emprestimo> emprestimos = new ArrayList<Emprestimo>();
-	private String usuarioAtual;
+	private String usuarioAtual = "";
 
 	public Biblioteca() {
 
@@ -90,6 +90,12 @@ public class Biblioteca {
 			}
 		}
 		return false;
+	}
+
+	public void livroDisponivel(Livro livro) throws IllegalStateException {
+		if (livro.getQuantidadeDisponivel() == 0) {
+			throw new IllegalStateException("O livro não está disponível no momento.");
+		}
 	}
 
 	// CATEGORIA
@@ -244,8 +250,11 @@ public class Biblioteca {
 
 	// EMPRÉSTIMO
 
-	public void realizarEmprestimo() {
+	public void realizarEmprestimo(Emprestimo emprestimo) {
 
+		emprestimos = Arquivo.lerArquivo(Emprestimo.class);
+		emprestimos.add(emprestimo);
+		Arquivo.escreverArquivo(emprestimos, Emprestimo.class);
 	}
 
 	public List<Emprestimo> consultarEmprestimoPorCodigo(int codigo) {
@@ -284,12 +293,23 @@ public class Biblioteca {
 		return emprestimos;
 	}
 
+	public void verificaDatas(Date dataInicio, Date dataFim) throws IllegalArgumentException {
+		if (dataInicio.after(dataFim)) {
+			throw new IllegalArgumentException("A data de início é posterior à data de fim.");
+		}
+	}
+
 	// AUTENTICAÇÂO
 
 	public int autenticacao(String usuario, String senha) {
 		List<Leitor> leitores = consultarLeitores();
 		usuarioAtual = usuario;
-		
+
+		if (usuario.equals("0") && senha.equals("0")) {
+			usuarioAtual = "";
+			return 1;
+		}
+
 		if (Administrador.getUsuario().equals(usuario) && Administrador.getSenha().equals(senha)) {
 			return 1;
 		}
@@ -301,6 +321,10 @@ public class Biblioteca {
 		}
 
 		return 0;
+	}
+
+	public String getUsuarioAtual() {
+		return usuarioAtual;
 	}
 
 }

@@ -1,1 +1,1 @@
-[{"codigo":1,"titulo":"titulo1","quantidadeDisponivel":1,"autor":"auto1"},{"codigo":2,"titulo":"tit2","categoria":{"codigo":1,"descricao":"drama"},"quantidadeDisponivel":5,"autor":"aut2"}]
+[{"codigo":1,"titulo":"titulo1","quantidadeDisponivel":0,"autor":"auto1"},{"codigo":2,"titulo":"tit2","categoria":{"codigo":1,"descricao":"drama"},"quantidadeDisponivel":5,"autor":"aut2"}]

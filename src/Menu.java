@@ -9,7 +9,7 @@ public class Menu {
 	private static Scanner sc;
 	private Biblioteca biblioteca = new Biblioteca();
 
- 	public Menu() {
+	public Menu() {
 
 	}
 
@@ -24,7 +24,12 @@ public class Menu {
 
 	public void menuGeral(int nivelUsuario) {
 		int op = -1;
-
+		
+		if(biblioteca.getUsuarioAtual() == "") {
+			System.out.println("Execução do programa finalizada.");
+			return;
+		}
+		
 		do {
 			System.out.println(" 1 - Livros");
 			System.out.println(" 2 - Categorias");
@@ -55,6 +60,7 @@ public class Menu {
 					break;
 				case 0:
 					System.out.println("Saindo...");
+					menuGeral(autenticacao());
 					break;
 				default:
 					System.out.println("Opção inválida, tente novamente.");
@@ -672,6 +678,43 @@ public class Menu {
 
 	public void realizarEmprestimo() {
 
+		try {
+			List<Livro> livros = biblioteca.consultarLivros();
+			System.out.println("Código\t\tTítulo\t\tAutor\t\tCategoria\t\tQuantidade Disponível");
+			for (Livro l : livros) {
+				System.out.println(l.getCodigo() + "\t\t" + l.getTitulo() + "\t\t" + l.getAutor() + "\t\t"
+						+ (l.getCategoria() != null ? l.getCategoria().getDescricao() : "Sem categoria") + "\t\t"
+						+ l.getQuantidadeDisponivel());
+			}
+			
+			System.out.println("Digite o código do livro: ");
+			int codigo = sc.nextInt();
+			sc.nextLine();
+			Livro livro = biblioteca.consultarLivroCodigo(codigo);
+			
+			biblioteca.livroDisponivel(livro);
+			
+			Leitor leitor = biblioteca.consultarLeitorUsuario(biblioteca.getUsuarioAtual());
+
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			
+			System.out.println("Digite a data de início do empréstimo do livro (dd/MM/yyyy): ");
+			String dataInicio = sc.nextLine();
+			System.out.println("Digite a data de fim do empréstimo do livro (dd/MM/yyyy): ");
+			String dataFim = sc.nextLine();
+			
+			Date dtInicio = sdf.parse(dataInicio);
+			Date dtFim = sdf.parse(dataFim);
+			
+			biblioteca.verificaDatas(dtInicio, dtFim);
+			
+			livro.setQuantidadeDisponivel(livro.getQuantidadeDisponivel() - 1);
+			biblioteca.realizarEmprestimo(new Emprestimo(leitor, livro, dtInicio, dtFim));
+			
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
 	}
 
 	public void consultarEmprestimo() {
@@ -739,11 +782,11 @@ public class Menu {
 
 	public int autenticacao() {
 		int nivelUsuario = 0;
-
+		System.out.println("0 - Finalizar a execução do programa");
 		do {
 			System.out.print("Digite o nome de usuário: ");
 			String usuario = sc.nextLine();
-			
+
 			System.out.print("Digite a senha: ");
 			String senha = sc.nextLine();
 
