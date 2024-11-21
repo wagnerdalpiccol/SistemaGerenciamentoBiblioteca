@@ -24,12 +24,12 @@ public class Menu {
 
 	public void menuGeral(int nivelUsuario) {
 		int op = -1;
-		
-		if(biblioteca.getUsuarioAtual() == "") {
+
+		if (biblioteca.getUsuarioAtual() == "") {
 			System.out.println("Execução do programa finalizada.");
 			return;
 		}
-		
+
 		do {
 			System.out.println(" 1 - Livros");
 			System.out.println(" 2 - Categorias");
@@ -218,6 +218,7 @@ public class Menu {
 		do {
 			System.out.println(" 1 - Realizar Empréstimo");
 			System.out.println(" 2 - Consultar");
+			System.out.println(" 3 - Devolução");
 			System.out.println(" 0 - sair ");
 
 			if (sc.hasNextInt()) {
@@ -231,6 +232,8 @@ public class Menu {
 				case 2:
 					consultarEmprestimo();
 					break;
+				case 3:
+					devolucao();
 				case 0:
 					System.out.println("Saindo...");
 					break;
@@ -480,6 +483,7 @@ public class Menu {
 		System.out.println(" 1 - Consultar Por Código");
 		System.out.println(" 2 - Consultar Por Título");
 		System.out.println(" 3 - Consultar Todos");
+		System.out.println(" 4 - Consultar Leitores");
 		if (sc.hasNextInt()) {
 			op = sc.nextInt();
 			sc.nextLine();
@@ -506,7 +510,7 @@ public class Menu {
 					System.out.println(" Título - " + livro.getTitulo());
 					System.out.println(" Autor - " + livro.getAutor());
 					System.out.println(
-							"Categoria - " + (livro.getCategoria() != null ? livro.getCategoria() : "Sem categoria"));
+							"Categoria - " + (livro.getCategoria() != null ? livro.getCategoria().getDescricao() : "Sem categoria"));
 					System.out.println(" Quantidade Disponível - " + livro.getQuantidadeDisponivel());
 
 				} catch (NoSuchElementException e) {
@@ -524,7 +528,7 @@ public class Menu {
 					System.out.println(" Título - " + livro.getTitulo());
 					System.out.println(" Autor - " + livro.getAutor());
 					System.out.println(
-							"Categoria - " + (livro.getCategoria() != null ? livro.getCategoria() : "Sem categoria"));
+							"Categoria - " + (livro.getCategoria() != null ? livro.getCategoria().getDescricao() : "Sem categoria"));
 					System.out.println(" Quantidade Disponível - " + livro.getQuantidadeDisponivel());
 
 				} catch (NoSuchElementException e) {
@@ -546,6 +550,11 @@ public class Menu {
 					System.out.println(e.getMessage());
 				}
 
+				break;
+				
+			case 4:
+				// IMPLEMENTAR BUSCA DE LIVROS QUE ESTÂO COM LEITORES
+				biblioteca.consultarLivroLeitores();
 				break;
 			}
 		} else {
@@ -686,31 +695,32 @@ public class Menu {
 						+ (l.getCategoria() != null ? l.getCategoria().getDescricao() : "Sem categoria") + "\t\t"
 						+ l.getQuantidadeDisponivel());
 			}
-			
+
 			System.out.println("Digite o código do livro: ");
 			int codigo = sc.nextInt();
 			sc.nextLine();
 			Livro livro = biblioteca.consultarLivroCodigo(codigo);
-			
+
 			biblioteca.livroDisponivel(livro);
-			
+
 			Leitor leitor = biblioteca.consultarLeitorUsuario(biblioteca.getUsuarioAtual());
 
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-			
+
 			System.out.println("Digite a data de início do empréstimo do livro (dd/MM/yyyy): ");
 			String dataInicio = sc.nextLine();
 			System.out.println("Digite a data de fim do empréstimo do livro (dd/MM/yyyy): ");
 			String dataFim = sc.nextLine();
-			
+
 			Date dtInicio = sdf.parse(dataInicio);
 			Date dtFim = sdf.parse(dataFim);
-			
+
 			biblioteca.verificaDatas(dtInicio, dtFim);
-			
+
 			livro.setQuantidadeDisponivel(livro.getQuantidadeDisponivel() - 1);
+			biblioteca.editarLivro(livro);
 			biblioteca.realizarEmprestimo(new Emprestimo(leitor, livro, dtInicio, dtFim));
-			
+
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -719,10 +729,12 @@ public class Menu {
 
 	public void consultarEmprestimo() {
 		int op;
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
 		System.out.println(" 1 - Consultar Por Código");
 		System.out.println(" 2 - Consultar Por Título");
 		System.out.println(" 3 - Consultar Por Datas");
+		System.out.println(" 4 - Consultar Pot Leitor");
 		if (sc.hasNextInt()) {
 			op = sc.nextInt();
 			sc.nextLine();
@@ -734,7 +746,12 @@ public class Menu {
 					if (sc.hasNextInt()) {
 						int codigo = sc.nextInt();
 						sc.nextLine();
-						biblioteca.consultarEmprestimoPorCodigo(codigo);
+						Emprestimo e = biblioteca.consultarEmprestimoPorCodigo(codigo);
+						System.out.println("Leitor: " + e.getLeitor().getUsuario());
+						System.out.println("Livro: " + e.getLivro().getTitulo());
+						System.out.println(
+								"Início: " + sdf.format(e.getDataInicio()) + " Fim:" + sdf.format(e.getDataFim()));
+
 					}
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
@@ -745,17 +762,21 @@ public class Menu {
 				try {
 					System.out.println("Digite o título do livro: ");
 					String titulo = sc.nextLine();
-					biblioteca.consultarEmprestimoPorTitulo(titulo);
 
-				} catch (Exception e) {
+					Emprestimo e = biblioteca.consultarEmprestimoPorTitulo(titulo);
+					System.out.println("Leitor: " + e.getLeitor().getUsuario());
+					System.out.println("Livro: " + e.getLivro().getTitulo());
+					System.out
+							.println("Início: " + sdf.format(e.getDataInicio()) + " Fim:" + sdf.format(e.getDataFim()));
+				}
+
+				catch (Exception e) {
 					System.out.println(e.getMessage());
 				}
 
 				break;
 			case 3:
 				try {
-					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-
 					System.out.println("Digite a data de início do empréstimo do livro (dd/MM/yyyy): ");
 					String dataInicio = sc.nextLine();
 					System.out.println("Digite a data de fim do empréstimo do livro (dd/MM/yyyy): ");
@@ -764,25 +785,42 @@ public class Menu {
 					Date dtInicio = sdf.parse(dataInicio);
 					Date dtFim = sdf.parse(dataFim);
 
-					biblioteca.consultarEmprestimoPorDatas(dtInicio, dtFim);
+					System.out.println("Leitor\t\tLivro\t\tInício\t\tFim");
+					for (Emprestimo e : biblioteca.consultarEmprestimoPorDatas(dtInicio, dtFim)) {
+						System.out.println(e.getLeitor().getUsuario() + "\t\t" + e.getLivro().getTitulo() + "\t\t"
+								+ sdf.format(e.getDataInicio()) + "\t\t" + sdf.format(e.getDataFim()));
+					}
 
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 				}
-
+			case 4:
+				biblioteca.consultarEmprestimoPorLeitor();
+				// IMPLEMENTAR
 				break;
 			}
-		} else {
+		} else
+
+		{
 			System.out.println("Número válido digitado.");
 			sc.nextLine();
 		}
 	}
+	
+	public void devolucao() {
+		// biblioteca.getUsuarioAtual(); -- usuario atual do sistema
+		// excluir o emprestimo
+		// ajustar aa quantidade disponivel do livro
+	}
+	
 
 	// AUTENTICAÇÂO
+	
 
 	public int autenticacao() {
 		int nivelUsuario = 0;
-		System.out.println("0 - Finalizar a execução do programa");
+		System.out.println("Para finalizar a execução do programa digite 0 em nome de usuário e senha.\n");
+		System.out.println("* Autenticação *\n");
 		do {
 			System.out.print("Digite o nome de usuário: ");
 			String usuario = sc.nextLine();

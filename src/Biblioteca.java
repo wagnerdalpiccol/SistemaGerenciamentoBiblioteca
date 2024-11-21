@@ -97,6 +97,10 @@ public class Biblioteca {
 			throw new IllegalStateException("O livro não está disponível no momento.");
 		}
 	}
+	
+	public void consultarLivroLeitores() {
+		
+	}
 
 	// CATEGORIA
 
@@ -257,28 +261,27 @@ public class Biblioteca {
 		Arquivo.escreverArquivo(emprestimos, Emprestimo.class);
 	}
 
-	public List<Emprestimo> consultarEmprestimoPorCodigo(int codigo) {
+	public Emprestimo consultarEmprestimoPorCodigo(int codigo) {
 		List<Emprestimo> todosEmprestimos = Arquivo.lerArquivo(Emprestimo.class);
 
 		for (Emprestimo emprestimo : todosEmprestimos) {
 			if (emprestimo.getLivro().getCodigo() == codigo) {
-				emprestimos.add(emprestimo);
+				return emprestimo;
 			}
 		}
-
-		return emprestimos;
+		throw new NoSuchElementException("Empréstimo não encontrado.");
 	}
 
-	public List<Emprestimo> consultarEmprestimoPorTitulo(String titulo) {
+	public Emprestimo consultarEmprestimoPorTitulo(String titulo) {
 		List<Emprestimo> todosEmprestimos = Arquivo.lerArquivo(Emprestimo.class);
 
 		for (Emprestimo emprestimo : todosEmprestimos) {
 			if (emprestimo.getLivro().getTitulo().equalsIgnoreCase(titulo)) {
-				emprestimos.add(emprestimo);
+				return emprestimo;
 			}
 		}
 
-		return emprestimos;
+		throw new NoSuchElementException("Empréstimo não encontrado.");
 	}
 
 	public List<Emprestimo> consultarEmprestimoPorDatas(Date dataInicio, Date dataFim) {
@@ -297,6 +300,14 @@ public class Biblioteca {
 		if (dataInicio.after(dataFim)) {
 			throw new IllegalArgumentException("A data de início é posterior à data de fim.");
 		}
+	}
+	
+	public void consultarEmprestimoPorLeitor() {
+		
+	}
+	
+	public void devolucao() {
+		
 	}
 
 	// AUTENTICAÇÂO

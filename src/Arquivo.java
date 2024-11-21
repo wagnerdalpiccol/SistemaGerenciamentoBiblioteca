@@ -9,7 +9,13 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 public class Arquivo {
-
+	
+	public static final String arquivoLeitor = "leitor.json";
+	public static final String arquivoLivro = "livro.json";
+	public static final String arquivoCategoria = "categoria.json";
+	public static final String arquivoEmprestimo = "emprestimo.json";
+	public static String nomeArquivo;
+	
 	public Arquivo() {
 
 	}
@@ -17,16 +23,15 @@ public class Arquivo {
 	public static <T> List<T> lerArquivo(Class<T> clazz) {
 		Gson gson = new Gson();
 		List<T> objetos = null;
-		String nomeArquivo = "";
 
 		if (clazz == Leitor.class) {
-			nomeArquivo = "leitor.json";
+			nomeArquivo = arquivoLeitor;
 		} else if (clazz == Livro.class) {
-			nomeArquivo = "livro.json";
+			nomeArquivo = arquivoLivro;
 		} else if (clazz == Categoria.class) {
-			nomeArquivo = "categoria.json";
+			nomeArquivo = arquivoCategoria;
 		} else if (clazz == Emprestimo.class) {
-			nomeArquivo = "emprestimo.json";
+			nomeArquivo = arquivoEmprestimo;
 		} else {
 			throw new IllegalArgumentException("Tipo de classe não suportado: " + clazz.getName());
 		}
@@ -43,16 +48,15 @@ public class Arquivo {
 
 	public static <T> void escreverArquivo(List<T> lista, Class<T> clazz) {
 		Gson gson = new Gson();
-		String nomeArquivo = "";
 
 		if (clazz == Leitor.class) {
-			nomeArquivo = "leitor.json";
+			nomeArquivo = arquivoLeitor;
 		} else if (clazz == Livro.class) {
-			nomeArquivo = "livro.json";
+			nomeArquivo = arquivoLivro;
 		} else if (clazz == Categoria.class) {
-			nomeArquivo = "categoria.json";
+			nomeArquivo = arquivoCategoria;
 		} else if (clazz == Emprestimo.class) {
-			nomeArquivo = "emprestimo.json";
+			nomeArquivo = arquivoEmprestimo;
 		} else {
 			throw new IllegalArgumentException("Tipo de classe não suportado: " + clazz.getName());
 		}
