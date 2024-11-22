@@ -808,9 +808,14 @@ public class Menu {
 	}
 	
 	public void devolucao() {
-		// biblioteca.getUsuarioAtual(); -- usuario atual do sistema
-		// excluir o emprestimo
-		// ajustar aa quantidade disponivel do livro
+		System.out.println("Digite o código do livro a ser devolvido: ");
+		int codigo = sc.nextInt();
+		sc.nextLine();
+		
+		Livro livro = biblioteca.consultarLivroCodigo(codigo);
+		biblioteca.removerEmprestimo(codigo, biblioteca.getUsuarioAtual());
+		livro.setQuantidadeDisponivel(livro.getQuantidadeDisponivel() + 1);
+		biblioteca.editarLivro(livro);
 	}
 	
 

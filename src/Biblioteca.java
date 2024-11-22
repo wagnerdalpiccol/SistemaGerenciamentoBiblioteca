@@ -8,7 +8,7 @@ public class Biblioteca {
 	private List<Categoria> categorias = new ArrayList<Categoria>();
 	private List<Leitor> leitores = new ArrayList<Leitor>();
 	private List<Emprestimo> emprestimos = new ArrayList<Emprestimo>();
-	private String usuarioAtual = "";
+	private String usuarioAtual;
 
 	public Biblioteca() {
 
@@ -97,9 +97,9 @@ public class Biblioteca {
 			throw new IllegalStateException("O livro não está disponível no momento.");
 		}
 	}
-	
+
 	public void consultarLivroLeitores() {
-		
+
 	}
 
 	// CATEGORIA
@@ -301,13 +301,32 @@ public class Biblioteca {
 			throw new IllegalArgumentException("A data de início é posterior à data de fim.");
 		}
 	}
-	
+
 	public void consultarEmprestimoPorLeitor() {
-		
+
 	}
-	
+
 	public void devolucao() {
-		
+
+	}
+
+	public void removerEmprestimo(int codigo, String usuario) throws NoSuchElementException {
+		List<Emprestimo> emprestimos = Arquivo.lerArquivo(Emprestimo.class);
+		Emprestimo emprestimoRemover = null;
+
+		for (Emprestimo e : emprestimos) {
+			if (e.getLivro().getCodigo() == codigo && e.getLeitor().getUsuario().equals(usuario)) {
+				emprestimoRemover = e;
+				break;
+			}
+		}
+
+		if (emprestimoRemover != null) {
+			emprestimos.remove(emprestimoRemover);
+			Arquivo.escreverArquivo(emprestimos, Emprestimo.class);
+			return;
+		}
+		throw new NoSuchElementException("Empréstimo não encontrado.");
 	}
 
 	// AUTENTICAÇÂO
