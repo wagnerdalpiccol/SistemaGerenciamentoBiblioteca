@@ -509,8 +509,8 @@ public class Menu {
 					System.out.println(" Código - " + livro.getCodigo());
 					System.out.println(" Título - " + livro.getTitulo());
 					System.out.println(" Autor - " + livro.getAutor());
-					System.out.println(
-							"Categoria - " + (livro.getCategoria() != null ? livro.getCategoria().getDescricao() : "Sem categoria"));
+					System.out.println("Categoria - "
+							+ (livro.getCategoria() != null ? livro.getCategoria().getDescricao() : "Sem categoria"));
 					System.out.println(" Quantidade Disponível - " + livro.getQuantidadeDisponivel());
 
 				} catch (NoSuchElementException e) {
@@ -527,8 +527,8 @@ public class Menu {
 					System.out.println(" Código - " + livro.getCodigo());
 					System.out.println(" Título - " + livro.getTitulo());
 					System.out.println(" Autor - " + livro.getAutor());
-					System.out.println(
-							"Categoria - " + (livro.getCategoria() != null ? livro.getCategoria().getDescricao() : "Sem categoria"));
+					System.out.println("Categoria - "
+							+ (livro.getCategoria() != null ? livro.getCategoria().getDescricao() : "Sem categoria"));
 					System.out.println(" Quantidade Disponível - " + livro.getQuantidadeDisponivel());
 
 				} catch (NoSuchElementException e) {
@@ -538,9 +538,8 @@ public class Menu {
 				break;
 			case 3:
 				try {
-					List<Livro> livros = biblioteca.consultarLivros();
 					System.out.println("Código\t\tTítulo\t\tAutor\t\tCategoria\t\tQuantidade Disponível");
-					for (Livro l : livros) {
+					for (Livro l : biblioteca.consultarLivros()) {
 						System.out.println(l.getCodigo() + "\t\t" + l.getTitulo() + "\t\t" + l.getAutor() + "\t\t"
 								+ (l.getCategoria() != null ? l.getCategoria().getDescricao() : "Sem categoria")
 								+ "\t\t" + l.getQuantidadeDisponivel());
@@ -551,12 +550,33 @@ public class Menu {
 				}
 
 				break;
-				
+
 			case 4:
-				// IMPLEMENTAR BUSCA DE LIVROS QUE ESTÂO COM LEITORES
-				biblioteca.consultarLivroLeitores();
+				try {
+					System.out.println("Código\t\tTítulo\t\tAutor\t\tCategoria\t\tQuantidade Disponível");
+					for (Livro l : biblioteca.consultarLivros()) {
+						System.out.println(l.getCodigo() + "\t\t" + l.getTitulo() + "\t\t" + l.getAutor() + "\t\t"
+								+ (l.getCategoria() != null ? l.getCategoria().getDescricao() : "Sem categoria")
+								+ "\t\t" + l.getQuantidadeDisponivel());
+					}
+
+					System.out.println("Digite o código do livro que deseja ver os leitores: ");
+					int codigo = sc.nextInt();
+					sc.nextLine();
+
+					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+					for (Emprestimo e : biblioteca.consultarEmpresitmosPorCodigoLivro(codigo)) {
+						System.out.println(e.getLeitor().getUsuario() + "\t\t" + e.getLivro().getTitulo() + "\t\t"
+								+ sdf.format(e.getDataInicio()) + "\t\t" + sdf.format(e.getDataFim()));
+					}
+
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+				}
 				break;
 			}
+
 		} else {
 			System.out.println("Número válido digitado.");
 			sc.nextLine();
@@ -734,7 +754,7 @@ public class Menu {
 		System.out.println(" 1 - Consultar Por Código");
 		System.out.println(" 2 - Consultar Por Título");
 		System.out.println(" 3 - Consultar Por Datas");
-		System.out.println(" 4 - Consultar Pot Leitor");
+		System.out.println(" 4 - Consultar Por Leitor");
 		if (sc.hasNextInt()) {
 			op = sc.nextInt();
 			sc.nextLine();
@@ -746,7 +766,7 @@ public class Menu {
 					if (sc.hasNextInt()) {
 						int codigo = sc.nextInt();
 						sc.nextLine();
-						Emprestimo e = biblioteca.consultarEmprestimoPorCodigo(codigo);
+						Emprestimo e = biblioteca.consultarEmprestimoPorCodigoLeitor(codigo);
 						System.out.println("Leitor: " + e.getLeitor().getUsuario());
 						System.out.println("Livro: " + e.getLivro().getTitulo());
 						System.out.println(
@@ -795,8 +815,12 @@ public class Menu {
 					System.out.println(e.getMessage());
 				}
 			case 4:
-				biblioteca.consultarEmprestimoPorLeitor();
-				// IMPLEMENTAR
+				System.out.println("Digite o nome de usuário que deseja ver os empréstimos: ");
+				String usuario = sc.nextLine();
+				for (Emprestimo e : biblioteca.consultarEmprestimoPorLeitor(usuario)) {
+					System.out.println(e.getLeitor().getUsuario() + "\t\t" + e.getLivro().getTitulo() + "\t\t"
+							+ sdf.format(e.getDataInicio()) + "\t\t" + sdf.format(e.getDataFim()));
+				}
 				break;
 			}
 		} else
@@ -806,21 +830,19 @@ public class Menu {
 			sc.nextLine();
 		}
 	}
-	
+
 	public void devolucao() {
 		System.out.println("Digite o código do livro a ser devolvido: ");
 		int codigo = sc.nextInt();
 		sc.nextLine();
-		
+
 		Livro livro = biblioteca.consultarLivroCodigo(codigo);
 		biblioteca.removerEmprestimo(codigo, biblioteca.getUsuarioAtual());
 		livro.setQuantidadeDisponivel(livro.getQuantidadeDisponivel() + 1);
 		biblioteca.editarLivro(livro);
 	}
-	
 
 	// AUTENTICAÇÂO
-	
 
 	public int autenticacao() {
 		int nivelUsuario = 0;

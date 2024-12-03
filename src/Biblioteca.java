@@ -98,10 +98,6 @@ public class Biblioteca {
 		}
 	}
 
-	public void consultarLivroLeitores() {
-
-	}
-
 	// CATEGORIA
 
 	public void adicionarCategoria(Categoria categoria) {
@@ -261,11 +257,24 @@ public class Biblioteca {
 		Arquivo.escreverArquivo(emprestimos, Emprestimo.class);
 	}
 
-	public Emprestimo consultarEmprestimoPorCodigo(int codigo) {
+	public List<Emprestimo> consultarEmpresitmosPorCodigoLivro(int codigo) {
+		List<Emprestimo> todosEmprestimos = Arquivo.lerArquivo(Emprestimo.class);
+
+		for (Emprestimo e : todosEmprestimos) {
+			if (e.getLivro().getCodigo() == codigo) {
+				emprestimos.add(e);
+			}
+		}
+
+		return emprestimos;
+	}
+
+	public Emprestimo consultarEmprestimoPorCodigoLeitor(int codigo) {
 		List<Emprestimo> todosEmprestimos = Arquivo.lerArquivo(Emprestimo.class);
 
 		for (Emprestimo emprestimo : todosEmprestimos) {
-			if (emprestimo.getLivro().getCodigo() == codigo) {
+			if (emprestimo.getLivro().getCodigo() == codigo
+					&& emprestimo.getLeitor().getUsuario().equals(getUsuarioAtual())) {
 				return emprestimo;
 			}
 		}
@@ -276,7 +285,8 @@ public class Biblioteca {
 		List<Emprestimo> todosEmprestimos = Arquivo.lerArquivo(Emprestimo.class);
 
 		for (Emprestimo emprestimo : todosEmprestimos) {
-			if (emprestimo.getLivro().getTitulo().equalsIgnoreCase(titulo)) {
+			if (emprestimo.getLivro().getTitulo().equalsIgnoreCase(titulo)
+					&& emprestimo.getLeitor().getUsuario().equals(getUsuarioAtual())) {
 				return emprestimo;
 			}
 		}
@@ -302,8 +312,15 @@ public class Biblioteca {
 		}
 	}
 
-	public void consultarEmprestimoPorLeitor() {
+	public List<Emprestimo> consultarEmprestimoPorLeitor(String usuario) {
+		List<Emprestimo> todosEmprestimos = Arquivo.lerArquivo(Emprestimo.class);
 
+		for (Emprestimo e : todosEmprestimos) {
+			if (e.getLeitor().getUsuario().equals(usuario)) {
+				emprestimos.add(e);
+			}
+		}
+		return emprestimos;
 	}
 
 	public void devolucao() {
