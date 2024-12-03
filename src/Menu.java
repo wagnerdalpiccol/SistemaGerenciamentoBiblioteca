@@ -56,7 +56,7 @@ public class Menu {
 					}
 					break;
 				case 4:
-					menuEmprestimo();
+					menuEmprestimo(nivelUsuario);
 					break;
 				case 0:
 					System.out.println("Saindo...");
@@ -212,13 +212,20 @@ public class Menu {
 		} while (op != 0);
 	}
 
-	public void menuEmprestimo() {
+	public void menuEmprestimo(int nivelUsuario) {
 		int op = -1;
 
 		do {
-			System.out.println(" 1 - Realizar Empréstimo");
+			if (nivelUsuario != 1) {
+				System.out.println(" 1 - Realizar Empréstimo");
+			}
 			System.out.println(" 2 - Consultar");
-			System.out.println(" 3 - Devolução");
+			if (nivelUsuario != 1) {
+				System.out.println(" 3 - Devolução");
+			}
+			if (nivelUsuario != 2) {
+				System.out.println(" 4 - Alterar empréstimo de um leitor");
+			}
 			System.out.println(" 0 - sair ");
 
 			if (sc.hasNextInt()) {
@@ -227,13 +234,22 @@ public class Menu {
 
 				switch (op) {
 				case 1:
-					realizarEmprestimo();
+					if (nivelUsuario != 1) {
+						realizarEmprestimo();
+					}
 					break;
 				case 2:
 					consultarEmprestimo();
 					break;
 				case 3:
-					devolucao();
+					if (nivelUsuario != 1) {
+						devolucao();
+					}
+					break;
+				case 4:
+					if (nivelUsuario != 2) {
+						alterarEmprestimoLeitor();
+					}
 				case 0:
 					System.out.println("Saindo...");
 					break;
@@ -284,6 +300,13 @@ public class Menu {
 			int codigo = sc.nextInt();
 			sc.nextLine();
 			biblioteca.removerCategoria(codigo);
+
+			for (Livro l : biblioteca.consultarLivros()) {
+				if (l.getCategoria().getCodigo() == codigo) {
+					l.setCategoria(null);
+				}
+			}
+
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -303,6 +326,13 @@ public class Menu {
 			String descricao = sc.nextLine();
 
 			biblioteca.editarCategoria(new Categoria(codigo, descricao));
+
+			for (Livro l : biblioteca.consultarLivros()) {
+				if (l.getCategoria().getCodigo() == codigo) {
+					l.getCategoria().setDescricao(descricao);
+					biblioteca.editarLivro(l);
+				}
+			}
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -751,10 +781,10 @@ public class Menu {
 		int op;
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-		System.out.println(" 1 - Consultar Por Código");
-		System.out.println(" 2 - Consultar Por Título");
+		System.out.println(" 1 - Consultar Por Código do Livro");
+		System.out.println(" 2 - Consultar Por Título do Livro");
 		System.out.println(" 3 - Consultar Por Datas");
-		System.out.println(" 4 - Consultar Por Leitor");
+		System.out.println(" 4 - Consultar Por Usuário do Leitor");
 		if (sc.hasNextInt()) {
 			op = sc.nextInt();
 			sc.nextLine();
@@ -814,10 +844,13 @@ public class Menu {
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 				}
+				break;
 			case 4:
 				System.out.println("Digite o nome de usuário que deseja ver os empréstimos: ");
 				String usuario = sc.nextLine();
-				for (Emprestimo e : biblioteca.consultarEmprestimoPorLeitor(usuario)) {
+				List<Emprestimo> emprestimos = biblioteca.consultarEmprestimoPorLeitor(usuario);
+				System.out.println("Usuário\t\tTítulo\t\tInício\t\tFim");
+				for (Emprestimo e : emprestimos) {
 					System.out.println(e.getLeitor().getUsuario() + "\t\t" + e.getLivro().getTitulo() + "\t\t"
 							+ sdf.format(e.getDataInicio()) + "\t\t" + sdf.format(e.getDataFim()));
 				}
@@ -840,6 +873,43 @@ public class Menu {
 		biblioteca.removerEmprestimo(codigo, biblioteca.getUsuarioAtual());
 		livro.setQuantidadeDisponivel(livro.getQuantidadeDisponivel() + 1);
 		biblioteca.editarLivro(livro);
+	}
+	
+	public void alterarEmprestimoLeitor() {
+		try {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		System.out.println("Digite o nome de usuário do leitor: ");
+		String usuario = sc.nextLine();
+		
+		List<Emprestimo> emprestimosLeitor = biblioteca.consultarEmprestimoPorLeitor(usuario);
+		
+		for (Emprestimo e : emprestimosLeitor) {
+			System.out.println(e.getLeitor().getUsuario() + "\t\t" + e.getLivro().getTitulo() + "\t\t"
+					+ sdf.format(e.getDataInicio()) + "\t\t" + sdf.format(e.getDataFim()));
+		}
+		
+		System.out.println("Digite o código do livro que deseja alterar a data de empréstimo: ");
+		int codigo = sc.nextInt();
+		sc.nextLine();
+		
+		biblioteca.consultarEmpresitmosPorCodigoLivro(codigo);
+		
+		System.out.println("Digite a data de início do empréstimo do livro (dd/MM/yyyy): ");
+		String dataInicio = sc.nextLine();
+		System.out.println("Digite a data de fim do empréstimo do livro (dd/MM/yyyy): ");
+		String dataFim = sc.nextLine();
+
+		Date dtInicio = sdf.parse(dataInicio);
+		Date dtFim = sdf.parse(dataFim);
+		
+		Leitor leitor = biblioteca.consultarLeitorUsuario(usuario);
+		Livro livro = biblioteca.consultarLivroCodigo(codigo);
+		
+		biblioteca.editarEmprestimo(new Emprestimo(leitor, livro, dtInicio, dtFim));
+		
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	// AUTENTICAÇÂO

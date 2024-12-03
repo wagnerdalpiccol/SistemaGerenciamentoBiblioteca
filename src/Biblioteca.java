@@ -4,10 +4,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class Biblioteca {
-	private List<Livro> livros = new ArrayList<Livro>();
-	private List<Categoria> categorias = new ArrayList<Categoria>();
-	private List<Leitor> leitores = new ArrayList<Leitor>();
-	private List<Emprestimo> emprestimos = new ArrayList<Emprestimo>();
 	private String usuarioAtual;
 
 	public Biblioteca() {
@@ -84,6 +80,7 @@ public class Biblioteca {
 	}
 
 	public boolean livroExiste(int codigo) {
+		List<Livro> livros = new ArrayList<Livro>();
 		for (Livro l : livros) {
 			if (l.getCodigo() == codigo) {
 				return true;
@@ -168,6 +165,7 @@ public class Biblioteca {
 	}
 
 	public boolean categoriaExiste(int codigo) {
+		List<Categoria> categorias = new ArrayList<Categoria>();
 		for (Categoria c : categorias) {
 			if (c.getCodigo() == codigo) {
 				return true;
@@ -179,12 +177,14 @@ public class Biblioteca {
 	// LEITOR
 
 	public void adicionarLeitor(Leitor leitor) {
+		List<Leitor> leitores = new ArrayList<Leitor>();
 		leitores = Arquivo.lerArquivo(Leitor.class);
 		leitores.add(leitor);
 		Arquivo.escreverArquivo(leitores, Leitor.class);
 	}
 
 	public void removerLeitor(String usuario) throws NoSuchElementException {
+		List<Leitor> leitores = new ArrayList<Leitor>();
 		leitores = Arquivo.lerArquivo(Leitor.class);
 		Leitor leitorRemover = null;
 
@@ -204,6 +204,7 @@ public class Biblioteca {
 	}
 
 	public void editarLeitor(Leitor leitor, String usuario) throws NoSuchElementException {
+		List<Leitor> leitores = new ArrayList<Leitor>();
 		leitores = Arquivo.lerArquivo(Leitor.class);
 		boolean encontrado = false;
 
@@ -223,6 +224,7 @@ public class Biblioteca {
 	}
 
 	public Leitor consultarLeitorUsuario(String usuario) throws NoSuchElementException {
+		List<Leitor> leitores = new ArrayList<Leitor>();
 		leitores = consultarLeitores();
 
 		for (Leitor l : leitores) {
@@ -238,6 +240,7 @@ public class Biblioteca {
 	}
 
 	public boolean leitorExiste(String usuario) {
+		List<Leitor> leitores = new ArrayList<Leitor>();
 		leitores = consultarLeitores();
 
 		for (Leitor l : leitores) {
@@ -251,7 +254,7 @@ public class Biblioteca {
 	// EMPRÉSTIMO
 
 	public void realizarEmprestimo(Emprestimo emprestimo) {
-
+		List<Emprestimo> emprestimos = new ArrayList<Emprestimo>();
 		emprestimos = Arquivo.lerArquivo(Emprestimo.class);
 		emprestimos.add(emprestimo);
 		Arquivo.escreverArquivo(emprestimos, Emprestimo.class);
@@ -259,7 +262,7 @@ public class Biblioteca {
 
 	public List<Emprestimo> consultarEmpresitmosPorCodigoLivro(int codigo) {
 		List<Emprestimo> todosEmprestimos = Arquivo.lerArquivo(Emprestimo.class);
-
+		List<Emprestimo> emprestimos = new ArrayList<Emprestimo>();
 		for (Emprestimo e : todosEmprestimos) {
 			if (e.getLivro().getCodigo() == codigo) {
 				emprestimos.add(e);
@@ -296,6 +299,7 @@ public class Biblioteca {
 
 	public List<Emprestimo> consultarEmprestimoPorDatas(Date dataInicio, Date dataFim) {
 		List<Emprestimo> todosEmprestimos = Arquivo.lerArquivo(Emprestimo.class);
+		List<Emprestimo> emprestimos = new ArrayList<Emprestimo>();
 
 		for (Emprestimo emprestimo : todosEmprestimos) {
 			if (!emprestimo.getDataFim().before(dataInicio) && !emprestimo.getDataInicio().after(dataFim)) {
@@ -314,6 +318,7 @@ public class Biblioteca {
 
 	public List<Emprestimo> consultarEmprestimoPorLeitor(String usuario) {
 		List<Emprestimo> todosEmprestimos = Arquivo.lerArquivo(Emprestimo.class);
+		List<Emprestimo> emprestimos = new ArrayList<Emprestimo>();
 
 		for (Emprestimo e : todosEmprestimos) {
 			if (e.getLeitor().getUsuario().equals(usuario)) {
@@ -344,6 +349,24 @@ public class Biblioteca {
 			return;
 		}
 		throw new NoSuchElementException("Empréstimo não encontrado.");
+	}
+
+	public void editarEmprestimo(Emprestimo emprestimo) throws NoSuchElementException {
+		List<Emprestimo> emprestimos = new ArrayList<Emprestimo>();
+		emprestimos = Arquivo.lerArquivo(Emprestimo.class);
+
+		for (int i = 0; i < emprestimos.size(); i++) {
+			if (emprestimos.get(i).getLeitor().getUsuario().equals(emprestimo.getLeitor().getUsuario())
+					&& emprestimos.get(i).getLivro().getCodigo() == emprestimo.getLivro().getCodigo()) {
+
+				emprestimos.set(i, emprestimo);
+				Arquivo.escreverArquivo(emprestimos, Emprestimo.class);
+				return;
+			}
+		}
+
+		throw new NoSuchElementException("Empréstimo de usuario " + emprestimo.getLeitor().getUsuario()
+				+ " e livro de codigo " + emprestimo.getLivro().getCodigo() + " não encontrado.");
 	}
 
 	// AUTENTICAÇÂO
