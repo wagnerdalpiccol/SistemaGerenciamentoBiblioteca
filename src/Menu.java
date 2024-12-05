@@ -865,6 +865,7 @@ public class Menu {
 	}
 
 	public void devolucao() {
+		try {
 		System.out.println("Digite o código do livro a ser devolvido: ");
 		int codigo = sc.nextInt();
 		sc.nextLine();
@@ -873,6 +874,9 @@ public class Menu {
 		biblioteca.removerEmprestimo(codigo, biblioteca.getUsuarioAtual());
 		livro.setQuantidadeDisponivel(livro.getQuantidadeDisponivel() + 1);
 		biblioteca.editarLivro(livro);
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
 	}
 	
 	public void alterarEmprestimoLeitor() {
